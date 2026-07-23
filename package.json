@@ -1,0 +1,8 @@
+{
+	"name": "flashcard",
+	"private": true,
+	"workspaces": ["frontend"],
+	"scripts": {
+		"build": "cd frontend && yarn build"
+	}
+}
