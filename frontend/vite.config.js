@@ -53,6 +53,7 @@ export default defineConfig(async () => {
 					display: "standalone",
 					name: "Flashcard",
 					short_name: "Flashcard",
+					id: "/flashcard",
 					start_url: "/flashcard",
 					scope: "/flashcard",
 					description: "A simple, fun flashcard review app",
