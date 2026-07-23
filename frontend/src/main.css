@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#app {
+	height: 100%;
+}
+
+body {
+	@apply bg-gradient-to-br from-grape-600 via-grape-500 to-bubblegum-500 font-sans text-grape-700;
+	min-height: 100vh;
+}
+
+.flip-scene {
+	perspective: 1200px;
+}
+
+.flip-card {
+	transform-style: preserve-3d;
+	transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.flip-card.is-flipped {
+	transform: rotateY(180deg);
+}
+
+.flip-face {
+	backface-visibility: hidden;
+}
+
+.flip-face-back {
+	transform: rotateY(180deg);
+}
