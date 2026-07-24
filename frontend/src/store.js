@@ -45,4 +45,8 @@ export const store = reactive({
 		const deck = this.decks.find((d) => d.name === deckName);
 		if (deck) deck.card_count += delta;
 	},
+
+	async logout() {
+		await api.logout();
+	},
 });

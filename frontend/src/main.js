@@ -4,7 +4,10 @@ import { createApp } from "vue";
 import { setConfig, frappeRequest } from "frappe-ui";
 
 import App from "./App.vue";
+import router from "./router";
 
 setConfig("resourceFetcher", frappeRequest);
 
-createApp(App).mount("#app");
+const app = createApp(App);
+app.use(router);
+app.mount("#app");

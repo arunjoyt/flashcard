@@ -18,4 +18,5 @@ export const api = {
 	updateCard: (card_name, front, back) =>
 		call("flashcard.flashcard.api.update_card", { card_name, front, back }),
 	deleteCard: (card_name) => call("flashcard.flashcard.api.delete_card", { card_name }),
+	logout: () => call("logout"),
 };

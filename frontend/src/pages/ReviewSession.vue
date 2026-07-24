@@ -1,9 +1,14 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { store } from "../store";
-import ReviewComplete from "./ReviewComplete.vue";
+import { useRouter } from "vue-router";
+import { store } from "@/store";
+import ReviewComplete from "@/components/ReviewComplete.vue";
 
-const emit = defineEmits(["done"]);
+const props = defineProps({
+	deckName: { type: String, required: true },
+});
+
+const router = useRouter();
 
 function shuffled(arr) {
 	const copy = [...arr];
@@ -26,7 +31,10 @@ const multiPassCount = computed(
 	() => Object.values(attempts.value).filter((n) => n > 0).length
 );
 
-onMounted(() => {
+onMounted(async () => {
+	if (store.activeDeck?.name !== props.deckName) {
+		await store.openDeck(props.deckName);
+	}
 	queue.value = shuffled(store.activeDeck.cards);
 });
 
@@ -50,6 +58,10 @@ function advance() {
 	flipped.value = false;
 	if (queue.value.length === 0) finished.value = true;
 }
+
+function exitReview() {
+	router.back();
+}
 </script>
 
 <template>
@@ -57,12 +69,12 @@ function advance() {
 		v-if="finished"
 		:total-cards="totalCards"
 		:multi-pass-count="multiPassCount"
-		@back="emit('done')"
+		@back="exitReview"
 	/>
 
 	<div v-else class="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-10 pt-8">
 		<div class="mb-6 flex items-center justify-between text-white">
-			<button class="font-semibold text-white/90" @click="emit('done')">✕ Exit</button>
+			<button class="font-semibold text-white/80" @click="exitReview">✕ Exit</button>
 			<span class="font-bold">{{ remaining }} left</span>
 		</div>
 
