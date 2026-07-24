@@ -18,7 +18,7 @@ defineEmits(["click"]);
 			:disabled="disabled"
 			@click="$emit('click')"
 		>
-			<div class="text-lg font-bold text-grape-700">{{ deck.name }}</div>
+			<div class="text-lg font-bold text-grape-700">{{ deck.deck_name }}</div>
 			<div class="text-sm text-grape-500">
 				{{ deck.card_count }} card{{ deck.card_count === 1 ? "" : "s" }}
 			</div>

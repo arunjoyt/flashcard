@@ -8,3 +8,17 @@ app_license = "mit"
 website_route_rules = [
     {"from_route": "/flashcard/<path:app_path>", "to_route": "flashcard"},
 ]
+
+has_permission = {
+    "Deck": "flashcard.flashcard.doctype.deck.deck.has_permission",
+    "Card": "flashcard.flashcard.doctype.card.card.has_permission",
+}
+
+permission_query_conditions = {
+    "Deck": "flashcard.flashcard.doctype.deck.deck.get_permission_query_conditions",
+    "Card": "flashcard.flashcard.doctype.card.card.get_permission_query_conditions",
+}
+
+fixtures = [
+    {"dt": "Role", "filters": [["name", "=", "Flashcard User"]]},
+]

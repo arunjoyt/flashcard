@@ -1,20 +1,28 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "field:deck_name",
+ "autoname": "hash",
  "creation": "2026-07-24 00:00:00.000000",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "deck_name"
+  "deck_name",
+  "user"
  ],
  "fields": [
   {
    "fieldname": "deck_name",
    "fieldtype": "Data",
    "label": "Deck Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
    "reqd": 1,
-   "unique": 1
+   "default": "__user"
   }
  ],
  "links": [],
@@ -22,7 +30,7 @@
  "modified_by": "Administrator",
  "module": "Flashcard",
  "name": "Deck",
- "naming_rule": "By fieldname",
+ "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [
   {
@@ -33,12 +41,13 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "All",
+   "role": "Flashcard User",
    "share": 1,
    "write": 1
   }
  ],
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "deck_name"
 }

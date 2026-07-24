@@ -114,7 +114,7 @@ async function confirmDeleteDeck() {
 		</button>
 
 		<h1 class="mb-6 text-2xl font-extrabold text-white drop-shadow-sm">
-			Manage "{{ store.activeDeck?.name }}"
+			Manage "{{ store.activeDeck?.deck_name }}"
 		</h1>
 
 		<div v-if="!store.activeDeck?.cards.length" class="mt-10 text-center">
@@ -180,7 +180,7 @@ async function confirmDeleteDeck() {
 
 		<div v-if="confirmingDeleteDeck" class="mt-8 flex flex-col items-center gap-2">
 			<p class="text-sm font-semibold text-white/80">
-				Delete "{{ store.activeDeck?.name }}" and all its cards? This can't be undone.
+				Delete "{{ store.activeDeck?.deck_name }}" and all its cards? This can't be undone.
 			</p>
 			<div class="flex gap-2">
 				<Button
