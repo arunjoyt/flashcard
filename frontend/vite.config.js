@@ -93,5 +93,17 @@ export default defineConfig(async () => {
 				"@": path.resolve(__dirname, "src"),
 			},
 		},
+		test: {
+			environment: "jsdom",
+			globals: true,
+			// Scoped to the unit-test directory so any future Playwright specs
+			// (which need a real bench site, not jsdom) never get picked up here.
+			include: ["tests/**/*.test.js"],
+			server: {
+				deps: {
+					inline: ["frappe-ui"],
+				},
+			},
+		},
 	};
 });

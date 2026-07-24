@@ -41,9 +41,14 @@ async function removeDeck(deckName) {
 			<li
 				v-for="deck in store.decks"
 				:key="deck.name"
+				data-test="deck-row"
 				class="animate-pop-in flex items-center justify-between rounded-2xl bg-white/95 p-4 shadow-lg shadow-grape-900/10"
 			>
-				<button class="flex-1 text-left" @click="emit('open-deck', deck.name)">
+				<button
+					class="flex-1 text-left"
+					data-test="deck-open"
+					@click="emit('open-deck', deck.name)"
+				>
 					<div class="text-lg font-bold text-grape-700">{{ deck.name }}</div>
 					<div class="text-sm text-grape-500">
 						{{ deck.card_count }} card{{ deck.card_count === 1 ? "" : "s" }}
@@ -52,6 +57,7 @@ async function removeDeck(deckName) {
 				<button
 					class="ml-3 rounded-full p-2 text-bubblegum-500 hover:bg-bubblegum-50"
 					aria-label="Delete deck"
+					data-test="deck-delete"
 					@click="removeDeck(deck.name)"
 				>
 					✕
@@ -63,12 +69,14 @@ async function removeDeck(deckName) {
 			<div v-if="showNewDeck" class="w-full max-w-md px-5">
 				<form
 					class="animate-bounce-in flex gap-2 rounded-2xl bg-white p-3 shadow-xl"
+					data-test="new-deck-form"
 					@submit.prevent="submitNewDeck"
 				>
 					<input
 						v-model="newDeckName"
 						type="text"
 						placeholder="Deck name"
+						data-test="deck-name-input"
 						class="flex-1 rounded-xl border-2 border-grape-100 px-3 py-2 outline-none focus:border-grape-400"
 						autofocus
 					/>
@@ -84,6 +92,7 @@ async function removeDeck(deckName) {
 			<button
 				v-else
 				class="rounded-full bg-sunshine-400 px-6 py-3 text-lg font-extrabold text-grape-700 shadow-xl shadow-grape-900/30 active:scale-95"
+				data-test="new-deck-button"
 				@click="showNewDeck = true"
 			>
 				+ New Deck
