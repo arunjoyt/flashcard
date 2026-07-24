@@ -4,8 +4,8 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 const tabs = [
-	{ name: "Decks", icon: "📚", label: "Decks" },
 	{ name: "Review", icon: "▶️", label: "Review" },
+	{ name: "Decks", icon: "📚", label: "Decks" },
 	{ name: "Settings", icon: "⚙️", label: "Settings" },
 ];
 
