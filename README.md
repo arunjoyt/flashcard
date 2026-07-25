@@ -33,6 +33,10 @@ Single-user app — no sharing, no per-Family or per-account permission model. A
 2. Assign the **Flashcard User** role — without it, they can create an account but can't create or manage Decks/Cards
 3. The user can now log in at the site URL and land on the Review tab
 
+| New User | Assign "Flashcard User" role |
+|---|---|
+| ![New User](docs/images/admin-new-user.png) | ![Assign Role](docs/images/admin-assign-role.png) |
+
 ## Installation
 
 You can install this app using the [bench](https://github.com/frappe/bench) CLI:
