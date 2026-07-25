@@ -2,6 +2,16 @@
 
 A simple, single-user flashcard app for reviewing self-authored front/back cards, organized into decks, built on [Frappe](https://frappeframework.com).
 
+## Screenshots
+
+| Decks | Manage Deck | Review |
+|---|---|---|
+| ![Decks](docs/images/decks.png) | ![Manage Deck](docs/images/manage-deck.png) | ![Review](docs/images/review.png) |
+
+| Review Session — front | Review Session — flipped | Settings |
+|---|---|---|
+| ![Review Session front](docs/images/review-session-front.png) | ![Review Session back](docs/images/review-session-back.png) | ![Settings](docs/images/settings.png) |
+
 ## Features
 
 - **Decks** — named collections of Cards on one topic; create, rename via cards, and delete (deleting cascades to all its Cards, after confirmation)
