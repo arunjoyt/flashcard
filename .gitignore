@@ -10,3 +10,6 @@ flashcard/public/frontend
 flashcard/www/flashcard.html
 frontend/auto-imports.d.ts
 frontend/components.d.ts
+frontend/test-results
+frontend/playwright-report
+frontend/blob-report

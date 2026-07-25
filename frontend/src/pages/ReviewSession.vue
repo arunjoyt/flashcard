@@ -82,6 +82,7 @@ function exitReview() {
 			<div
 				class="flip-card relative h-72 w-full max-w-sm cursor-pointer"
 				:class="{ 'is-flipped': flipped }"
+				data-test="review-card"
 				@click="flip"
 			>
 				<div
@@ -102,12 +103,14 @@ function exitReview() {
 		<div v-if="flipped" class="mt-6 flex gap-3">
 			<button
 				class="flex-1 rounded-2xl bg-white/95 py-4 text-lg font-extrabold text-bubblegum-600 shadow-lg active:scale-95"
+				data-test="mark-dont-know"
 				@click="markDontKnowIt"
 			>
 				✗ Don't Know It
 			</button>
 			<button
 				class="flex-1 rounded-2xl bg-white/95 py-4 text-lg font-extrabold text-grape-600 shadow-lg active:scale-95"
+				data-test="mark-know-it"
 				@click="markKnowIt"
 			>
 				✓ Know It

@@ -214,8 +214,21 @@ async function confirmDeleteDeck() {
 				<h2 class="text-lg font-bold text-grape-700">
 					{{ editingCard ? "Edit Card" : "New Card" }}
 				</h2>
-				<Input v-model="front" type="textarea" placeholder="Front (question)" :rows="2" autofocus />
-				<Input v-model="back" type="textarea" placeholder="Back (answer)" :rows="2" />
+				<Input
+					v-model="front"
+					type="textarea"
+					placeholder="Front (question)"
+					:rows="2"
+					autofocus
+					data-test="card-front-input"
+				/>
+				<Input
+					v-model="back"
+					type="textarea"
+					placeholder="Back (answer)"
+					:rows="2"
+					data-test="card-back-input"
+				/>
 				<ErrorMessage :message="formError" />
 				<div class="flex gap-2">
 					<Button type="button" variant="ghost" class="flex-1" @click="closeForm">Cancel</Button>
@@ -225,6 +238,7 @@ async function confirmDeleteDeck() {
 						theme="blue"
 						class="flex-1"
 						:loading="busy"
+						data-test="save-card"
 					>
 						Save
 					</Button>

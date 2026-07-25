@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.3",
@@ -16,6 +19,7 @@
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.14",

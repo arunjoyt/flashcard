@@ -20,7 +20,7 @@ onMounted(() => {
 
 <template>
 	<div class="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-5 text-center">
-		<div class="animate-bounce-in rounded-3xl bg-white/95 p-8 shadow-2xl">
+		<div class="animate-bounce-in rounded-3xl bg-white/95 p-8 shadow-2xl" data-test="review-complete">
 			<p class="text-5xl">🎉</p>
 			<h1 class="mt-3 text-2xl font-extrabold text-grape-700">Deck complete!</h1>
 			<p class="mt-2 text-grape-500">
