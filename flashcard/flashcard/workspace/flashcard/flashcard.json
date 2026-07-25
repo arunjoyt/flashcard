@@ -1,7 +1,7 @@
 {
  "charts": [],
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Flashcard</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Open Flashcard App\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>Data</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Deck\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Card\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>Help</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Help\",\"col\":3}}]",
- "creation": "2026-07-25 00:00:00.000000",
+ "content": "[{\"id\":\"0OigM4aXvq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Flashcard</b></span>\",\"col\":12}},{\"id\":\"ajElMazJib\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Open Flashcard App\",\"col\":3}},{\"id\":\"pGMAdQqTlp\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"B1TrJAjUB7\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>Data</b></span>\",\"col\":12}},{\"id\":\"VJGynZ7-5X\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Deck\",\"col\":3}},{\"id\":\"71WeXvD_HT\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Card\",\"col\":3}},{\"id\":\"cqgIiQtJ7l\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"ft4w2okYNv\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h5\\\"><b>Help</b></span>\",\"col\":12}},{\"id\":\"bIFzeLd-OP\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Help\",\"col\":3}}]",
+ "creation": "2026-07-25 00:00:00",
  "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
@@ -12,7 +12,7 @@
  "is_hidden": 0,
  "label": "Flashcard",
  "links": [],
- "modified": "2026-07-25 00:00:00.000000",
+ "modified": "2026-07-25 09:00:00.000000",
  "modified_by": "Administrator",
  "module": "Flashcard",
  "name": "Flashcard",
@@ -31,15 +31,19 @@
    "url": "/flashcard"
   },
   {
-   "doc_view": "",
+   "color": "Grey",
+   "doc_view": "List",
    "label": "Deck",
    "link_to": "Deck",
+   "stats_filter": "[]",
    "type": "DocType"
   },
   {
-   "doc_view": "",
+   "color": "Grey",
+   "doc_view": "List",
    "label": "Card",
    "link_to": "Card",
+   "stats_filter": "[]",
    "type": "DocType"
   },
   {
