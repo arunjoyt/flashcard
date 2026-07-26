@@ -30,13 +30,14 @@ test.describe('Review session', () => {
 
   test.afterEach(async ({ page }) => {
     await page.goto('decks');
-    await page.locator('[data-test="deck-row"]', { hasText: DECK_NAME }).locator('[data-test="deck-open"]').click();
+    // The deck now has cards, so deck-open would start a Review Session — use the manage icon instead.
+    await page.locator('[data-test="deck-row"]', { hasText: DECK_NAME }).locator('[data-test="deck-manage"]').click();
     await page.locator('[data-test="delete-deck-button"]').click();
     await page.locator('[data-test="deck-confirm-delete"]').click();
   });
 
   test('flip, mark, requeue on Don\'t Know It, and reach completion', async ({ page }) => {
-    await page.goto('review');
+    await page.goto('decks');
     await page
       .locator('[data-test="deck-row"]', { hasText: DECK_NAME })
       .locator('[data-test="deck-open"]')

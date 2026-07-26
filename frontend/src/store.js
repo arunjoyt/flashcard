@@ -6,7 +6,16 @@ export const store = reactive({
 	activeDeck: null, // { name, cards: [{ name, front, back }] }
 
 	async loadDecks() {
-		this.decks = await api.getDecks();
+		if (!this._loadDecksPromise) {
+			this._loadDecksPromise = api.getDecks().finally(() => {
+				this._loadDecksPromise = null;
+			});
+		}
+		this.decks = await this._loadDecksPromise;
+	},
+
+	get totalCardCount() {
+		return this.decks.reduce((sum, deck) => sum + deck.card_count, 0);
 	},
 
 	async createDeck(deckName) {
@@ -17,6 +26,15 @@ export const store = reactive({
 	async deleteDeck(deckName) {
 		await api.deleteDeck(deckName);
 		this.decks = this.decks.filter((d) => d.name !== deckName);
+	},
+
+	async renameDeck(deckName, newName) {
+		const result = await api.updateDeck(deckName, newName);
+		if (this.activeDeck?.name === deckName) {
+			this.activeDeck.deck_name = result.deck_name;
+		}
+		const deck = this.decks.find((d) => d.name === deckName);
+		if (deck) deck.deck_name = result.deck_name;
 	},
 
 	async openDeck(deckName) {

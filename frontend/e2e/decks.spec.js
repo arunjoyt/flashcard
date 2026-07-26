@@ -61,4 +61,25 @@ test.describe('Decks', () => {
     await page.locator('[data-test="deck-confirm-delete"]').click();
     await expect(page).toHaveURL(/\/decks$/);
   });
+
+  test('rename a deck', async ({ page }) => {
+    const deckName = uniqueDeckName('rename');
+    const renamedName = uniqueDeckName('renamed');
+    await page.goto('decks');
+    await createDeck(page, deckName);
+
+    await page.locator('[data-test="deck-row"]', { hasText: deckName }).locator('[data-test="deck-open"]').click();
+    await expect(page).toHaveURL(/\/decks\/.+\/manage/);
+    await expect(page.getByText(`Manage "${deckName}"`)).toBeVisible();
+
+    await page.locator('[data-test="rename-deck-button"]').click();
+    await page.locator('[data-test="rename-deck-input"]').fill(renamedName);
+    await page.locator('[data-test="save-deck-name"]').click();
+    await expect(page.getByText(`Manage "${renamedName}"`)).toBeVisible();
+
+    await page.locator('[data-test="manage-back"]').click();
+    await expect(page.locator('[data-test="deck-row"]', { hasText: renamedName })).toBeVisible();
+
+    await deleteDeck(page, renamedName);
+  });
 });

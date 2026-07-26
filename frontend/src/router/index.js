@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
-	{ path: "/", redirect: "/review" },
+	{
+		path: "/",
+		name: "Launch",
+		component: () => import("@/pages/Launch.vue"),
+	},
 	{
 		path: "/decks",
 		name: "Decks",
@@ -16,15 +20,20 @@ const routes = [
 	},
 	{
 		path: "/review",
-		name: "Review",
-		component: () => import("@/pages/Review.vue"),
-		meta: { tab: true },
+		name: "ReviewAllCards",
+		component: () => import("@/pages/ReviewSession.vue"),
 	},
 	{
 		path: "/review/:deckName",
 		name: "ReviewSession",
 		component: () => import("@/pages/ReviewSession.vue"),
 		props: true,
+	},
+	{
+		path: "/stats",
+		name: "Stats",
+		component: () => import("@/pages/Stats.vue"),
+		meta: { tab: true },
 	},
 	{
 		path: "/settings",

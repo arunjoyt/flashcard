@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from frappe.utils import get_last_day, today
 
 
 def _get_owned_deck(deck_name):
@@ -37,6 +38,15 @@ def create_deck(deck_name):
         frappe.throw(_("Deck name is required."))
     doc = frappe.get_doc({"doctype": "Deck", "deck_name": deck_name}).insert()
     return doc.name
+
+
+@frappe.whitelist()
+def update_deck(deck_name, new_name):
+    doc = frappe.get_doc("Deck", deck_name)
+    doc.check_permission("write")
+    doc.deck_name = new_name
+    doc.save()
+    return {"name": doc.name, "deck_name": doc.deck_name}
 
 
 @frappe.whitelist()
@@ -80,3 +90,42 @@ def update_card(card_name, front, back):
 def delete_card(card_name):
     frappe.get_doc("Card", card_name).check_permission("delete")
     frappe.delete_doc("Card", card_name)
+
+
+@frappe.whitelist()
+def get_all_cards():
+    return frappe.get_all(
+        "Card",
+        filters={"user": frappe.session.user},
+        fields=["name", "front", "back"],
+        order_by="creation asc",
+    )
+
+
+@frappe.whitelist()
+def record_cards_viewed(count):
+    count = int(count)
+    if count <= 0:
+        return
+
+    existing = frappe.db.exists("Daily Stat", {"user": frappe.session.user, "date": today()})
+    if existing:
+        doc = frappe.get_doc("Daily Stat", existing)
+        doc.cards_viewed += count
+        doc.save()
+    else:
+        frappe.get_doc({"doctype": "Daily Stat", "date": today(), "cards_viewed": count}).insert()
+
+
+@frappe.whitelist()
+def get_monthly_stats(year, month):
+    year = int(year)
+    month = int(month)
+    start = f"{year:04d}-{month:02d}-01"
+    end = get_last_day(start)
+    rows = frappe.get_all(
+        "Daily Stat",
+        filters={"user": frappe.session.user, "date": ["between", [start, end]]},
+        fields=["date", "cards_viewed"],
+    )
+    return {str(row.date): row.cards_viewed for row in rows}

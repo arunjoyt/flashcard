@@ -16,6 +16,9 @@ _Avoid_: Member, owner, learner
 **Deck**: A named collection of Cards on one topic (e.g. "Spanish Verbs"). A Card belongs to exactly one Deck. Review happens one Deck at a time. Deleting a Deck cascades to delete all its Cards, after user confirmation.
 _Avoid_: Set, collection, stack, pile
 
+**All Cards**: A pinned pseudo-deck, always shown first in the Decks tab, that pools every Card from every real Deck into one shuffled Review Session. It is not a Deck record — it has no row in the database, can't be renamed or deleted, and has no Manage Deck screen, since a Card's home Deck doesn't change by appearing in it. This preserves "a Card belongs to exactly one Deck" exactly as written above.
+_Avoid_: Random deck, mixed deck, combined deck
+
 **Card**: A single front/back pair of plain text — a prompt and its answer. Belongs to exactly one Deck.
 _Avoid_: Note, item, flashcard (redundant with app name), entry
 
@@ -26,7 +29,7 @@ _Avoid_: Note, item, flashcard (redundant with app name), entry
 **Review** (mechanic): Simple flip-through, not spaced repetition. Cards are shown in some order; the user flips each one to reveal the answer. No scheduling algorithm, no per-card recall history driving when a card resurfaces.
 _Avoid_: Study, practice, spaced repetition, SRS
 
-**Review Session**: A single pass through one Deck's Cards, presented in shuffled order. The user flips each Card and marks it Know It or Don't Know It. A Don't Know It Card is requeued to reappear later in the same session. The session ends once every Card has been marked Know It at least once, showing a completion screen (cards reviewed, how many needed multiple passes) before returning to the Review tab. Nothing from a Review Session is persisted to the Card afterward.
+**Review Session**: A single pass through one Deck's Cards (or, for All Cards, every Card pooled together), presented in shuffled order. The user flips each Card and marks it Know It or Don't Know It. A Don't Know It Card is requeued to reappear later in the same session. The session ends once every Card has been marked Know It at least once, showing a completion screen (cards reviewed, how many needed multiple passes) before returning to the Decks tab. Nothing from a Review Session is persisted to the Card afterward — see [[ADR-0001]] for why, and [[ADR-0002]] for how this coexists with Daily Stat.
 _Avoid_: Round, quiz, test, practice run
 
 **Know It / Don't Know It**: The two self-assessment marks the user can give a Card during a Review Session. Ephemeral — they only affect requeuing within the current session and are not stored on the Card.
@@ -39,16 +42,29 @@ _Avoid_: Reveal, turn over
 
 ## Navigation
 
-Three bottom tabs: Decks, Review, Settings. There is no per-Deck hub screen — each tab's Deck list leads straight into that tab's one job, so the same Deck row means something different depending which tab it's tapped from.
+Three bottom tabs: Decks, Stats, Settings. There is no per-Deck hub screen — Manage Deck is the only per-Deck screen, reached from the Decks tab.
 
-**Decks (tab)**: The default landing tab — shows all Decks with their Card counts, nothing else. No last-reviewed dates or other stats are tracked, consistent with Review Sessions being ephemeral (see [[ADR-0001]]). Decks are created here. Tapping a Deck goes straight to Manage Deck for it.
-_Avoid_: Home, dashboard, library, Deck List
+**Decks (tab)**: Shows All Cards (pinned first) plus every real Deck, each with its Card count. This is where Review and the old Decks tab merged — reviewing, not managing, is the primary action. Tapping a Deck row (or All Cards) with at least one Card launches a Review Session immediately, no intermediate confirmation screen. Tapping a real Deck row with zero Cards opens Manage Deck instead, since there's nothing to review yet. A small secondary control on each real Deck's row (not shown on All Cards, which has nothing to manage) opens Manage Deck directly even when the Deck has Cards. Decks are created here.
+_Avoid_: Home, dashboard, library, Deck List, Review tab (merged away)
 
-**Review (tab)**: Shows all Decks with their Card counts. Tapping a Deck with at least one Card launches a Review Session for it immediately — there's no intermediate confirmation screen. A Deck with no Cards is shown but not tappable here.
-_Avoid_: Study, practice
+**Launch**: Opening the app skips the Decks tab and auto-starts a Review Session for All Cards directly — reviewing is the first thing the user sees, not a screen they navigate to. If there isn't at least one Card anywhere yet, launch falls back to the Decks tab's empty state instead. See [[ADR-0003]] for why this bypasses the tab entirely instead of just being one tap away.
+_Avoid_: Onboarding, splash, home screen
 
-**Manage Deck**: The per-Deck screen reached from the Decks tab. Cards are added, edited, and deleted here, showing both front and back of each Card. Deleting the Deck itself also happens only here.
+**Manage Deck**: The per-Deck screen reached from the Decks tab (see above for which taps land here). Cards are added, edited, and deleted here, showing both front and back of each Card. Deleting the Deck itself also happens only here. All Cards has no Manage Deck screen — it isn't a Deck.
 _Avoid_: Deck detail, deck settings, edit deck
+
+**Stats (tab)**: A calendar (month grid) of Daily Stats — one cell per day showing that day's Cards Viewed count.
+_Avoid_: Analytics, dashboard, history, heatmap (rejected in favor of a numbered grid, see [[ADR-0002]])
 
 **Settings (tab)**: Account-level actions not scoped to any one Deck — currently just Log out.
 _Avoid_: Account, profile
+
+---
+
+## Usage Stats
+
+**Daily Stat**: One aggregate record per calendar day per User, recording that day's Cards Viewed count. Not linked to any specific Deck or Card — see [[ADR-0002]] for why this is aggregate-only rather than a per-Card or per-Deck history.
+_Avoid_: Analytics record, log entry, activity record
+
+**Cards Viewed**: The count of distinct Cards flipped during a Review Session, credited to the day the session happened on. Each Card counts once per session even if shown multiple times (from Don't Know It requeuing). Credited even if the session is exited early rather than completed, since the review activity genuinely happened.
+_Avoid_: Cards reviewed, cards studied, flips, sessions count (deliberately not tracked — nothing in the app surfaces it, see [[ADR-0002]])

@@ -12,11 +12,13 @@ website_route_rules = [
 has_permission = {
     "Deck": "flashcard.flashcard.doctype.deck.deck.has_permission",
     "Card": "flashcard.flashcard.doctype.card.card.has_permission",
+    "Daily Stat": "flashcard.flashcard.doctype.daily_stat.daily_stat.has_permission",
 }
 
 permission_query_conditions = {
     "Deck": "flashcard.flashcard.doctype.deck.deck.get_permission_query_conditions",
     "Card": "flashcard.flashcard.doctype.card.card.get_permission_query_conditions",
+    "Daily Stat": "flashcard.flashcard.doctype.daily_stat.daily_stat.get_permission_query_conditions",
 }
 
 fixtures = [

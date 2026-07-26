@@ -1,11 +1,13 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Input, Button } from "frappe-ui";
 import { store } from "@/store";
 import DeckRow from "@/components/DeckRow.vue";
 
 const router = useRouter();
+
+const allCardsDeck = computed(() => ({ deck_name: "All Cards", card_count: store.totalCardCount }));
 
 const showNewDeck = ref(false);
 const newDeckName = ref("");
@@ -24,15 +26,27 @@ async function submitNewDeck() {
 	}
 }
 
-function openDeck(deckName) {
+function openAllCards() {
+	router.push({ name: "ReviewAllCards" });
+}
+
+function openDeck(deck) {
+	if (deck.card_count === 0) {
+		router.push({ name: "ManageDeck", params: { deckName: deck.name } });
+	} else {
+		router.push({ name: "ReviewSession", params: { deckName: deck.name } });
+	}
+}
+
+function manageDeck(deckName) {
 	router.push({ name: "ManageDeck", params: { deckName } });
 }
 </script>
 
 <template>
 	<div class="mx-auto max-w-md px-5 pb-24 pt-10">
-		<h1 class="mb-1 text-3xl font-extrabold text-gray-900">🃏 Flashcard</h1>
-		<p class="mb-6 text-gray-500">Pick a deck to manage, or make a new one.</p>
+		<h1 class="mb-1 text-3xl font-extrabold text-gray-900">📚 Decks</h1>
+		<p class="mb-6 text-gray-500">Tap a deck to start reviewing, or make a new one.</p>
 
 		<div v-if="store.decks.length === 0" class="mt-10 text-center">
 			<p class="text-lg font-semibold text-gray-600">No decks yet!</p>
@@ -41,10 +55,18 @@ function openDeck(deckName) {
 
 		<ul class="space-y-3">
 			<DeckRow
+				v-if="store.totalCardCount > 0"
+				:deck="allCardsDeck"
+				is-all-cards
+				@click="openAllCards"
+			/>
+			<DeckRow
 				v-for="deck in store.decks"
 				:key="deck.name"
 				:deck="deck"
-				@click="openDeck(deck.name)"
+				show-manage
+				@click="openDeck(deck)"
+				@manage="manageDeck(deck.name)"
 			/>
 		</ul>
 

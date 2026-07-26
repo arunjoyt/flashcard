@@ -6,10 +6,14 @@ vi.mock("@/api", () => ({
 		getDecks: vi.fn(),
 		createDeck: vi.fn(),
 		deleteDeck: vi.fn(),
+		updateDeck: vi.fn(),
 		getDeck: vi.fn(),
 		createCard: vi.fn(),
 		updateCard: vi.fn(),
 		deleteCard: vi.fn(),
+		getAllCards: vi.fn(),
+		recordCardsViewed: vi.fn(),
+		getMonthlyStats: vi.fn(),
 	},
 }));
 
@@ -58,5 +62,35 @@ describe("store", () => {
 		await store.removeCard("c1");
 		expect(store.activeDeck.cards).toEqual([{ name: "c2" }]);
 		expect(store.decks[0].card_count).toBe(1);
+	});
+
+	it("renameDeck updates the deck_name in the list and on the active deck", async () => {
+		store.decks = [{ name: "Spanish", deck_name: "Spanish", card_count: 3 }];
+		store.activeDeck = { name: "Spanish", deck_name: "Spanish", cards: [] };
+		api.updateDeck.mockResolvedValue({ name: "Spanish", deck_name: "Español" });
+		await store.renameDeck("Spanish", "Español");
+		expect(api.updateDeck).toHaveBeenCalledWith("Spanish", "Español");
+		expect(store.decks[0].deck_name).toBe("Español");
+		expect(store.activeDeck.deck_name).toBe("Español");
+	});
+
+	it("renameDeck does not touch activeDeck if a different deck is open", async () => {
+		store.decks = [{ name: "Spanish", deck_name: "Spanish", card_count: 3 }];
+		store.activeDeck = { name: "French", deck_name: "French", cards: [] };
+		api.updateDeck.mockResolvedValue({ name: "Spanish", deck_name: "Español" });
+		await store.renameDeck("Spanish", "Español");
+		expect(store.activeDeck.deck_name).toBe("French");
+	});
+
+	it("totalCardCount sums card_count across all decks", () => {
+		store.decks = [
+			{ name: "Spanish", card_count: 3 },
+			{ name: "French", card_count: 1 },
+		];
+		expect(store.totalCardCount).toBe(4);
+	});
+
+	it("totalCardCount is 0 when there are no decks", () => {
+		expect(store.totalCardCount).toBe(0);
 	});
 });

@@ -25,11 +25,41 @@ const confirmingDeleteDeck = ref(false);
 const deletingDeck = ref(false);
 const deckDeleteError = ref("");
 
+const renamingDeck = ref(false);
+const deckNameInput = ref("");
+const renamingBusy = ref(false);
+const renameError = ref("");
+
 onMounted(async () => {
 	if (store.activeDeck?.name !== props.deckName) {
 		await store.openDeck(props.deckName);
 	}
 });
+
+function startRenameDeck() {
+	deckNameInput.value = store.activeDeck?.deck_name || "";
+	renameError.value = "";
+	renamingDeck.value = true;
+}
+
+function cancelRenameDeck() {
+	renamingDeck.value = false;
+}
+
+async function submitRenameDeck() {
+	const name = deckNameInput.value.trim();
+	if (!name || renamingBusy.value) return;
+	renamingBusy.value = true;
+	renameError.value = "";
+	try {
+		await store.renameDeck(props.deckName, name);
+		renamingDeck.value = false;
+	} catch (error) {
+		renameError.value = error?.messages?.join("\n") || error?.message || "Failed to rename";
+	} finally {
+		renamingBusy.value = false;
+	}
+}
 
 function openNewCard() {
 	editingCard.value = null;
@@ -113,9 +143,43 @@ async function confirmDeleteDeck() {
 			← Decks
 		</button>
 
-		<h1 class="mb-6 text-2xl font-extrabold text-gray-900">
-			Manage "{{ store.activeDeck?.deck_name }}"
-		</h1>
+		<div class="mb-6 flex items-center gap-2">
+			<h1 v-if="!renamingDeck" class="flex-1 text-2xl font-extrabold text-gray-900">
+				Manage "{{ store.activeDeck?.deck_name }}"
+			</h1>
+			<form v-else class="flex flex-1 items-start gap-2" @submit.prevent="submitRenameDeck">
+				<Input
+					v-model="deckNameInput"
+					type="text"
+					class="flex-1"
+					autofocus
+					data-test="rename-deck-input"
+				/>
+				<Button
+					type="submit"
+					variant="solid"
+					theme="blue"
+					size="sm"
+					:loading="renamingBusy"
+					data-test="save-deck-name"
+				>
+					Save
+				</Button>
+				<Button type="button" variant="ghost" size="sm" data-test="cancel-rename-deck" @click="cancelRenameDeck">
+					Cancel
+				</Button>
+			</form>
+			<button
+				v-if="!renamingDeck"
+				class="rounded-full p-2 text-gray-400 hover:bg-gray-100"
+				aria-label="Rename deck"
+				data-test="rename-deck-button"
+				@click="startRenameDeck"
+			>
+				✏️
+			</button>
+		</div>
+		<ErrorMessage class="mb-4" :message="renameError" />
 
 		<div v-if="!store.activeDeck?.cards.length" class="mt-10 text-center">
 			<p class="text-lg font-semibold text-gray-600">No cards yet!</p>

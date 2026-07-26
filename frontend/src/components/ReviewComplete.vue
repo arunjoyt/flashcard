@@ -33,7 +33,7 @@ onMounted(() => {
 				class="mt-6 w-full rounded-2xl bg-grape-600 py-3 text-lg font-extrabold text-white active:scale-95"
 				@click="$emit('back')"
 			>
-				Back to Deck
+				Back to Decks
 			</button>
 		</div>
 	</div>
