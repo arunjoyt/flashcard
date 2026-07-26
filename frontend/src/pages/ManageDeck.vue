@@ -106,20 +106,20 @@ async function confirmDeleteDeck() {
 <template>
 	<div class="mx-auto max-w-md px-5 pb-28 pt-8">
 		<button
-			class="mb-4 font-semibold text-white/80"
+			class="mb-4 font-semibold text-gray-500"
 			data-test="manage-back"
 			@click="router.push({ name: 'Decks' })"
 		>
 			← Decks
 		</button>
 
-		<h1 class="mb-6 text-2xl font-extrabold text-white drop-shadow-sm">
+		<h1 class="mb-6 text-2xl font-extrabold text-gray-900">
 			Manage "{{ store.activeDeck?.deck_name }}"
 		</h1>
 
 		<div v-if="!store.activeDeck?.cards.length" class="mt-10 text-center">
-			<p class="text-lg font-semibold text-white/80">No cards yet!</p>
-			<p class="text-white/60">Add a card below to start building this deck.</p>
+			<p class="text-lg font-semibold text-gray-600">No cards yet!</p>
+			<p class="text-gray-400">Add a card below to start building this deck.</p>
 		</div>
 
 		<ErrorMessage class="mb-3" :message="cardDeleteError" />
@@ -129,11 +129,11 @@ async function confirmDeleteDeck() {
 				v-for="card in store.activeDeck?.cards"
 				:key="card.name"
 				data-test="manage-card-row"
-				class="animate-pop-in flex items-center justify-between rounded-2xl bg-white/95 p-4 shadow-lg shadow-grape-900/10"
+				class="animate-pop-in flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm"
 			>
 				<button class="flex-1 text-left" @click="openEditCard(card)">
-					<div class="font-bold text-grape-700">{{ card.front }}</div>
-					<div class="text-sm text-grape-500">{{ card.back }}</div>
+					<div class="font-bold text-gray-900">{{ card.front }}</div>
+					<div class="text-sm text-gray-500">{{ card.back }}</div>
 				</button>
 
 				<div v-if="confirmingDeleteCard === card.name" class="ml-3 flex shrink-0 gap-1">
@@ -158,7 +158,7 @@ async function confirmDeleteDeck() {
 				</div>
 				<button
 					v-else
-					class="ml-3 rounded-full p-2 text-bubblegum-500 hover:bg-bubblegum-50"
+					class="ml-3 rounded-full p-2 text-red-500 hover:bg-red-50"
 					aria-label="Delete card"
 					data-test="card-delete"
 					@click="startDeleteCard(card.name)"
@@ -169,7 +169,7 @@ async function confirmDeleteDeck() {
 		</ul>
 
 		<button
-			class="mt-6 w-full rounded-2xl border-2 border-dashed border-white/60 py-3 font-bold text-white active:scale-95"
+			class="mt-6 w-full rounded-2xl border-2 border-dashed border-grape-300 py-3 font-bold text-grape-600 active:scale-95"
 			data-test="add-card-button"
 			@click="openNewCard"
 		>
@@ -179,7 +179,7 @@ async function confirmDeleteDeck() {
 		<ErrorMessage class="mt-4" :message="deckDeleteError" />
 
 		<div v-if="confirmingDeleteDeck" class="mt-8 flex flex-col items-center gap-2">
-			<p class="text-sm font-semibold text-white/80">
+			<p class="text-sm font-semibold text-gray-600">
 				Delete "{{ store.activeDeck?.deck_name }}" and all its cards? This can't be undone.
 			</p>
 			<div class="flex gap-2">
@@ -199,7 +199,7 @@ async function confirmDeleteDeck() {
 		</div>
 		<button
 			v-else
-			class="mt-8 w-full text-center text-sm font-semibold text-white/60 hover:text-white hover:underline"
+			class="mt-8 w-full text-center text-sm font-semibold text-gray-400 hover:text-red-500 hover:underline"
 			data-test="delete-deck-button"
 			@click="confirmingDeleteDeck = true"
 		>

@@ -9,7 +9,9 @@ body,
 }
 
 body {
-	@apply bg-gradient-to-br from-grape-600 via-grape-500 to-bubblegum-500 font-sans text-grape-700;
+	@apply font-sans text-gray-900;
+	background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 35%, #e0e7ff 70%, #ddd6fe 100%);
+	background-attachment: fixed;
 	min-height: 100vh;
 }
 

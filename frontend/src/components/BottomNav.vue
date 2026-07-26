@@ -12,6 +12,8 @@ const tabs = [
 function isActive(name) {
 	return route.name === name;
 }
+
+const appVersion = window.app_version || "";
 </script>
 
 <template>
@@ -19,6 +21,12 @@ function isActive(name) {
 		class="fixed inset-x-0 bottom-0 z-40 flex items-center justify-around border-t border-grape-100 bg-white/95 backdrop-blur"
 		style="padding-bottom: env(safe-area-inset-bottom)"
 	>
+		<span
+			class="pointer-events-none absolute right-3 top-1 rounded-full bg-gray-900/5 px-1.5 py-px text-[0.6rem] font-medium tracking-wide text-gray-500"
+			data-test="app-version"
+		>
+			v{{ appVersion }}
+		</span>
 		<router-link
 			v-for="tab in tabs"
 			:key="tab.name"

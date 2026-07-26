@@ -20,29 +20,20 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ["Baloo 2", "ui-sans-serif", "system-ui", "sans-serif"],
+				sans: ["Nunito", "ui-sans-serif", "system-ui", "sans-serif"],
 			},
 			colors: {
 				grape: {
-					// 100/900 fill in the scale so classes like border-grape-100 and
-					// shadow-grape-900/10 (used throughout for card borders/shadow tint)
-					// actually resolve — Tailwind silently drops utilities for shades
-					// that aren't defined, so these were previously invisible.
+					// Full scale so classes like border-grape-100 and shadow-grape-900/10
+					// (used throughout for card borders/shadow tint) actually resolve —
+					// Tailwind silently drops utilities for shades that aren't defined.
+					50: "#F5F3FF",
 					100: "#DDD6FE",
+					300: "#C4B5FD",
 					500: "#7C3AED",
 					600: "#6D28D9",
 					700: "#5B21B6",
 					900: "#4C1D95",
-				},
-				bubblegum: {
-					50: "#FDF2F8",
-					400: "#F472B6",
-					500: "#EC4899",
-					600: "#DB2777",
-				},
-				sunshine: {
-					400: "#FACC15",
-					500: "#EAB308",
 				},
 				// frappe-ui's Button theme="blue" reads these tokens directly (see
 				// node_modules/frappe-ui/src/components/Button/Button.vue); overriding

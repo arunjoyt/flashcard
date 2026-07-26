@@ -12,6 +12,16 @@ A simple, single-user flashcard app for reviewing self-authored front/back cards
 |---|---|---|
 | ![Review Session front](docs/images/review-session-front.png) | ![Review Session back](docs/images/review-session-back.png) | ![Settings](docs/images/settings.png) |
 
+Regenerate these after a UI change, against an already-running bench site (same requirement as the Playwright e2e suite below — needs a **Flashcard User** test account):
+
+```bash
+# from apps/flashcard/frontend
+yarn build
+yarn screenshots
+```
+
+Builds a throwaway "Spanish Basics" demo deck, captures each view, and deletes the deck afterward. Override target/credentials the same way the e2e suite does: `FLASHCARD_TEST_URL`, `FLASHCARD_TEST_EMAIL`, `FLASHCARD_TEST_PASSWORD`.
+
 ## Features
 
 - **Decks** — named collections of Cards on one topic; create, rename via cards, and delete (deleting cascades to all its Cards, after confirmation)

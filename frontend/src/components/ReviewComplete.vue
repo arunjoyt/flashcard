@@ -13,14 +13,14 @@ onMounted(() => {
 		particleCount: 140,
 		spread: 90,
 		origin: { y: 0.6 },
-		colors: ["#7C3AED", "#EC4899", "#FACC15", "#ffffff"],
+		colors: ["#7C3AED", "#A78BFA", "#DDD6FE", "#ffffff"],
 	});
 });
 </script>
 
 <template>
 	<div class="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-5 text-center">
-		<div class="animate-bounce-in rounded-3xl bg-white/95 p-8 shadow-2xl" data-test="review-complete">
+		<div class="animate-bounce-in rounded-3xl bg-white p-8 shadow-2xl" data-test="review-complete">
 			<p class="text-5xl">🎉</p>
 			<h1 class="mt-3 text-2xl font-extrabold text-grape-700">Deck complete!</h1>
 			<p class="mt-2 text-grape-500">
@@ -30,7 +30,7 @@ onMounted(() => {
 				{{ multiPassCount }} needed a second look — nice work getting through them.
 			</p>
 			<button
-				class="mt-6 w-full rounded-2xl bg-grape-500 py-3 text-lg font-extrabold text-white active:scale-95"
+				class="mt-6 w-full rounded-2xl bg-grape-600 py-3 text-lg font-extrabold text-white active:scale-95"
 				@click="$emit('back')"
 			>
 				Back to Deck

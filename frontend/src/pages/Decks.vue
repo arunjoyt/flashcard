@@ -31,12 +31,12 @@ function openDeck(deckName) {
 
 <template>
 	<div class="mx-auto max-w-md px-5 pb-24 pt-10">
-		<h1 class="mb-1 text-3xl font-extrabold text-white drop-shadow-sm">🃏 Flashcard</h1>
-		<p class="mb-6 text-white/80">Pick a deck to manage, or make a new one.</p>
+		<h1 class="mb-1 text-3xl font-extrabold text-gray-900">🃏 Flashcard</h1>
+		<p class="mb-6 text-gray-500">Pick a deck to manage, or make a new one.</p>
 
 		<div v-if="store.decks.length === 0" class="mt-10 text-center">
-			<p class="text-lg font-semibold text-white/80">No decks yet!</p>
-			<p class="text-white/60">Create your first deck to get started.</p>
+			<p class="text-lg font-semibold text-gray-600">No decks yet!</p>
+			<p class="text-gray-400">Create your first deck to get started.</p>
 		</div>
 
 		<ul class="space-y-3">
@@ -70,7 +70,7 @@ function openDeck(deckName) {
 			</div>
 			<button
 				v-else
-				class="rounded-full bg-sunshine-400 px-6 py-3 text-lg font-extrabold text-grape-700 shadow-xl shadow-grape-900/30 active:scale-95"
+				class="rounded-full bg-grape-600 px-6 py-3 text-lg font-extrabold text-white shadow-lg shadow-grape-900/20 active:scale-95"
 				data-test="new-deck-button"
 				@click="showNewDeck = true"
 			>
