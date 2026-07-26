@@ -21,7 +21,8 @@ export const api = {
 		call("flashcard.flashcard.api.update_card", { card_name, front, back }),
 	deleteCard: (card_name) => call("flashcard.flashcard.api.delete_card", { card_name }),
 	getAllCards: () => call("flashcard.flashcard.api.get_all_cards"),
-	recordCardsViewed: (count) => call("flashcard.flashcard.api.record_cards_viewed", { count }),
+	recordCardsViewed: (count, date) =>
+		call("flashcard.flashcard.api.record_cards_viewed", { count, date }),
 	getMonthlyStats: (year, month) =>
 		call("flashcard.flashcard.api.get_monthly_stats", { year, month }),
 	logout: () => call("logout"),

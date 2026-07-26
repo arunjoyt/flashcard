@@ -1,6 +1,6 @@
 import frappe
 from frappe import _
-from frappe.utils import get_last_day, today
+from frappe.utils import get_last_day, getdate
 
 
 def _get_owned_deck(deck_name):
@@ -103,18 +103,19 @@ def get_all_cards():
 
 
 @frappe.whitelist()
-def record_cards_viewed(count):
+def record_cards_viewed(count, date):
     count = int(count)
     if count <= 0:
         return
+    date = getdate(date)
 
-    existing = frappe.db.exists("Daily Stat", {"user": frappe.session.user, "date": today()})
+    existing = frappe.db.exists("Daily Stat", {"user": frappe.session.user, "date": date})
     if existing:
         doc = frappe.get_doc("Daily Stat", existing)
         doc.cards_viewed += count
         doc.save()
     else:
-        frappe.get_doc({"doctype": "Daily Stat", "date": today(), "cards_viewed": count}).insert()
+        frappe.get_doc({"doctype": "Daily Stat", "date": date, "cards_viewed": count}).insert()
 
 
 @frappe.whitelist()

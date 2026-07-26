@@ -1,5 +1,9 @@
 # App launch bypasses the Decks tab, straight into a Review Session
 
+**Reverted.** In practice the zero-tap auto-start felt too abrupt — exactly the risk this ADR called out below. `/` now redirects back to the Decks tab, which is the default landing tab again. Kept here for the reasoning trail; the mechanics described below no longer reflect current behavior.
+
+---
+
 Before this change, `/` redirected to the Review tab — already a list screen, one tap from reviewing. We're changing launch to skip tab navigation entirely: opening the app auto-starts a Review Session for All Cards immediately, with no list screen shown first. Exiting that session (or finishing it) lands on the Decks tab as normal; the tab is still there for picking a specific Deck, it's just no longer what launch shows first.
 
 This is a step further than "reviewing is one tap away" — it makes reviewing the zero-tap default, at the cost of removing any choice at launch. A user who wants a specific Deck instead of All Cards must exit first. We accepted that cost because the stated goal was for going through cards to be "front and center," and a list screen — even a fast one — is still a screen to get past before review starts.

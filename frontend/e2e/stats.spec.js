@@ -1,16 +1,20 @@
 /**
- * Launch auto-starts a Review Session for All Cards, and finishing/exiting
- * one records that day's Cards Viewed count on the Stats calendar.
- * Creates its own deck/card and cleans up after.
+ * The app root lands on the Decks tab, and finishing/exiting a Review
+ * Session records that day's Cards Viewed count on the Stats calendar.
  */
 import { test, expect } from '@playwright/test';
 import { userState } from './helpers/auth.js';
 
 test.use({ storageState: userState });
 
-const DECK_NAME = `E2E launch ${Date.now()}`;
+test('the app root lands on the Decks tab', async ({ page }) => {
+  await page.goto('');
+  await expect(page).toHaveURL(/\/decks$/);
+});
 
-test.describe('Launch and Stats', () => {
+test.describe('Stats', () => {
+  const DECK_NAME = `E2E stats ${Date.now()}`;
+
   test.beforeEach(async ({ page }) => {
     await page.goto('decks');
     await page.locator('[data-test="new-deck-button"]').click();
@@ -31,8 +35,9 @@ test.describe('Launch and Stats', () => {
     await page.locator('[data-test="deck-confirm-delete"]').click();
   });
 
-  test('launching the app starts an All Cards Review Session, and finishing it records a Stats entry for today', async ({ page }) => {
-    await page.goto('');
+  test('finishing an All Cards Review Session records a Stats entry for today', async ({ page }) => {
+    await page.goto('decks');
+    await page.locator('[data-test="all-cards-row"]', { hasText: 'All Cards' }).locator('[data-test="deck-open"]').click();
     await expect(page).toHaveURL(/\/review$/);
     await expect(page.locator('[data-test="review-card"]')).toBeVisible();
 

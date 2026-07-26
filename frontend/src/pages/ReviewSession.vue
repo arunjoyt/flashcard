@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { store } from "@/store";
 import { api } from "@/api";
+import { todayDateKey } from "@/dateUtils";
 import ReviewComplete from "@/components/ReviewComplete.vue";
 
 const props = defineProps({
@@ -42,6 +43,7 @@ const canGoPrev = computed(() =>
 const canGoNext = computed(() => viewIndex.value !== null);
 const totalCards = computed(() => allCards.value.length);
 const remaining = computed(() => new Set(queue.value.map((c) => c.name)).size);
+const cardPosition = computed(() => totalCards.value - remaining.value + 1);
 const multiPassCount = computed(
 	() => Object.values(attempts.value).filter((n) => n > 0).length
 );
@@ -100,7 +102,7 @@ async function exitReview() {
 	if (!statsSent.value) {
 		statsSent.value = true;
 		if (viewedCards.value.size > 0) {
-			await api.recordCardsViewed(viewedCards.value.size);
+			await api.recordCardsViewed(viewedCards.value.size, todayDateKey());
 		}
 	}
 	router.push({ name: "Decks" });
@@ -115,15 +117,15 @@ async function exitReview() {
 		@back="exitReview"
 	/>
 
-	<div v-else class="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-10 pt-8">
+	<div v-else class="mx-auto flex h-dvh max-w-md flex-col overflow-hidden px-5 pb-10 pt-8">
 		<div class="mb-6 flex items-center justify-between text-gray-900">
 			<button class="font-semibold text-gray-500" @click="exitReview">✕ Exit</button>
-			<span class="font-bold">{{ remaining }} left</span>
+			<span class="font-bold" data-test="card-position">{{ cardPosition }}/{{ totalCards }}</span>
 		</div>
 
-		<div v-if="displayedCard" class="flip-scene flex flex-1 items-end justify-center pb-6">
+		<div v-if="displayedCard" class="flip-scene flex min-h-0 flex-1 items-end justify-center pb-6">
 			<div
-				class="flip-card relative h-72 w-full max-w-sm cursor-pointer"
+				class="flip-card relative h-full max-h-72 w-full max-w-sm cursor-pointer"
 				:class="{ 'is-flipped': flipped }"
 				data-test="review-card"
 				@click="flip"
@@ -151,6 +153,27 @@ async function exitReview() {
 
 		<div class="flex gap-3">
 			<button
+				class="flex-1 rounded-2xl bg-white py-4 text-lg font-extrabold text-red-500 shadow-sm active:scale-95"
+				:class="{ invisible: !(flipped && !viewingHistory) }"
+				:tabindex="flipped && !viewingHistory ? 0 : -1"
+				data-test="mark-dont-know"
+				@click="markDontKnowIt"
+			>
+				✗ Don't Know It
+			</button>
+			<button
+				class="flex-1 rounded-2xl bg-white py-4 text-lg font-extrabold text-grape-600 shadow-sm active:scale-95"
+				:class="{ invisible: !(flipped && !viewingHistory) }"
+				:tabindex="flipped && !viewingHistory ? 0 : -1"
+				data-test="mark-know-it"
+				@click="markKnowIt"
+			>
+				✓ Know It
+			</button>
+		</div>
+
+		<div class="mt-3 flex gap-3">
+			<button
 				class="flex-1 rounded-2xl bg-white py-3 text-base font-bold text-gray-400 shadow-sm active:scale-95 disabled:opacity-30"
 				data-test="history-prev"
 				:disabled="!canGoPrev"
@@ -166,26 +189,6 @@ async function exitReview() {
 			>
 				{{ viewingHistory && viewIndex === answeredHistory.length - 1 ? "Resume Review ›" : "Next ›" }}
 			</button>
-		</div>
-
-		<div class="mt-3 flex gap-3">
-			<template v-if="flipped && !viewingHistory">
-				<button
-					class="flex-1 rounded-2xl bg-white py-4 text-lg font-extrabold text-red-500 shadow-sm active:scale-95"
-					data-test="mark-dont-know"
-					@click="markDontKnowIt"
-				>
-					✗ Don't Know It
-				</button>
-				<button
-					class="flex-1 rounded-2xl bg-white py-4 text-lg font-extrabold text-grape-600 shadow-sm active:scale-95"
-					data-test="mark-know-it"
-					@click="markKnowIt"
-				>
-					✓ Know It
-				</button>
-			</template>
-			<div v-else class="h-[60px] flex-1"></div>
 		</div>
 	</div>
 </template>

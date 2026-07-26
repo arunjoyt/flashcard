@@ -42,13 +42,10 @@ _Avoid_: Reveal, turn over
 
 ## Navigation
 
-Three bottom tabs: Decks, Stats, Settings. There is no per-Deck hub screen — Manage Deck is the only per-Deck screen, reached from the Decks tab.
+Three bottom tabs: Decks, Stats, Settings. Decks is the default landing tab — opening the app lands there, no auto-started Review Session (see [[ADR-0003]], reverted). There is no per-Deck hub screen — Manage Deck is the only per-Deck screen, reached from the Decks tab.
 
-**Decks (tab)**: Shows All Cards (pinned first) plus every real Deck, each with its Card count. This is where Review and the old Decks tab merged — reviewing, not managing, is the primary action. Tapping a Deck row (or All Cards) with at least one Card launches a Review Session immediately, no intermediate confirmation screen. Tapping a real Deck row with zero Cards opens Manage Deck instead, since there's nothing to review yet. A small secondary control on each real Deck's row (not shown on All Cards, which has nothing to manage) opens Manage Deck directly even when the Deck has Cards. Decks are created here.
+**Decks (tab)**: The default landing tab — shows All Cards (pinned first) plus every real Deck, each with its Card count. This is where Review and the old Decks tab merged — reviewing, not managing, is the primary action. Tapping a Deck row (or All Cards) with at least one Card launches a Review Session immediately, no intermediate confirmation screen. Tapping a real Deck row with zero Cards opens Manage Deck instead, since there's nothing to review yet. A small secondary control on each real Deck's row (not shown on All Cards, which has nothing to manage) opens Manage Deck directly even when the Deck has Cards. Decks are created here.
 _Avoid_: Home, dashboard, library, Deck List, Review tab (merged away)
-
-**Launch**: Opening the app skips the Decks tab and auto-starts a Review Session for All Cards directly — reviewing is the first thing the user sees, not a screen they navigate to. If there isn't at least one Card anywhere yet, launch falls back to the Decks tab's empty state instead. See [[ADR-0003]] for why this bypasses the tab entirely instead of just being one tap away.
-_Avoid_: Onboarding, splash, home screen
 
 **Manage Deck**: The per-Deck screen reached from the Decks tab (see above for which taps land here). Cards are added, edited, and deleted here, showing both front and back of each Card. Deleting the Deck itself also happens only here. All Cards has no Manage Deck screen — it isn't a Deck.
 _Avoid_: Deck detail, deck settings, edit deck

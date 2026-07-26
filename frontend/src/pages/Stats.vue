@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import { api } from "@/api";
+import { dateKey, todayDateKey } from "@/dateUtils";
 
 const today = new Date();
 const year = ref(today.getFullYear());
@@ -16,15 +17,7 @@ const monthLabel = computed(() =>
 	})
 );
 
-function pad(n) {
-	return String(n).padStart(2, "0");
-}
-
-function dateKey(y, m, d) {
-	return `${y}-${pad(m)}-${pad(d)}`;
-}
-
-const todayKey = dateKey(today.getFullYear(), today.getMonth() + 1, today.getDate());
+const todayKey = todayDateKey();
 
 const days = computed(() => {
 	const daysInMonth = new Date(year.value, month.value, 0).getDate();

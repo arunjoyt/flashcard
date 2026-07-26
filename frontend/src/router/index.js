@@ -1,11 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
-	{
-		path: "/",
-		name: "Launch",
-		component: () => import("@/pages/Launch.vue"),
-	},
+	{ path: "/", redirect: "/decks" },
 	{
 		path: "/decks",
 		name: "Decks",
