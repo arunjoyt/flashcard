@@ -1,6 +1,6 @@
 # Flashcard
 
-A simple, single-user flashcard app for reviewing self-authored front/back cards, organized into decks, built on [Frappe](https://frappeframework.com).
+A simple flashcard app for reviewing self-authored front/back cards, organized into decks, built on [Frappe](https://frappeframework.com). Each account's Decks and Cards are private — there's no sharing between users.
 
 ## Screenshots
 
@@ -35,7 +35,7 @@ Builds a throwaway "Spanish Basics" demo deck, captures each view, and deletes t
 |---|---|
 | **Flashcard User** | Create, edit, and delete their own Decks and Cards; run Review Sessions |
 
-Single-user app — no sharing, no per-Family or per-account permission model. Admin sets up accounts through Frappe Desk; there's no self-service signup.
+Each account only ever sees its own Decks and Cards — no sharing between users. Admin sets up accounts through Frappe Desk; there's no self-service signup.
 
 ## Admin Setup (one-time per user)
 
