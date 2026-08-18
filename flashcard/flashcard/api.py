@@ -21,7 +21,7 @@ def get_decks():
         row.deck: row.count
         for row in frappe.get_all(
             "Card",
-            fields=["deck", "count(name) as count"],
+            fields=["deck", {"COUNT": "name", "as": "count"}],
             filters={"user": frappe.session.user},
             group_by="deck",
         )
