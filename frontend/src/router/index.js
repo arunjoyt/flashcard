@@ -26,12 +26,6 @@ const routes = [
 		props: true,
 	},
 	{
-		path: "/stats",
-		name: "Stats",
-		component: () => import("@/pages/Stats.vue"),
-		meta: { tab: true },
-	},
-	{
 		path: "/settings",
 		name: "Settings",
 		component: () => import("@/pages/Settings.vue"),

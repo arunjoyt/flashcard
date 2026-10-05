@@ -26,7 +26,7 @@ Builds a throwaway "Spanish Basics" demo deck, captures each view, and deletes t
 
 - **Decks** — named collections of Cards on one topic; create, rename via cards, and delete (deleting cascades to all its Cards, after confirmation)
 - **Cards** — simple front/back pairs of plain text, managed from the deck's Manage screen
-- **Review Session** — a shuffled flip-through of one deck's Cards; flip each card to reveal its answer, then mark Know It or Don't Know It — a Don't Know It card is requeued to reappear later in the same session. No spaced-repetition scheduling
+- **Review Session** — a shuffled flip-through of one deck's Cards; flip each card to reveal its answer and move between cards with Prev / Next. No spaced-repetition scheduling
 - **Single-page UI** — all views load at `/flashcard`; three bottom tabs (Decks, Review, Settings) with instant navigation and no page reloads
 
 ## User Roles
@@ -100,7 +100,7 @@ yarn test:e2e:report       # open the HTML report from the last run
 
 By default it targets `http://127.0.0.1:8005/flashcard/` and logs in as `user@flashcard.test`; override with `FLASHCARD_TEST_URL`, `FLASHCARD_TEST_EMAIL`, and `FLASHCARD_TEST_PASSWORD`.
 
-Covers deck creation/deletion, card CRUD within a deck, the review session flow (flip, Know It / Don't Know It, requeue, completion screen), and logout — each test creates its own uniquely-named deck and cleans up afterward so the site is left unchanged.
+Covers deck creation/deletion, card CRUD within a deck, the review session flow (flip, Prev / Next), and logout — each test creates its own uniquely-named deck and cleans up afterward so the site is left unchanged.
 
 > **Note:** `frontend/e2e/.auth/` and `frontend/e2e/report/` are gitignored — they contain live session tokens and generated artifacts. These tests are a **local dev tool only** — not run in CI.
 

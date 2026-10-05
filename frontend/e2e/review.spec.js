@@ -1,6 +1,6 @@
 /**
- * Review session flow — flip a card, mark it, and requeue on "Don't Know It"
- * until the deck is finished. Creates its own deck/cards and cleans up after.
+ * Review session flow — flip a card and move between cards with Prev / Next.
+ * Creates its own deck/cards and cleans up after.
  */
 import { test, expect } from '@playwright/test';
 import { userState } from './helpers/auth.js';
@@ -36,7 +36,7 @@ test.describe('Review session', () => {
     await page.locator('[data-test="deck-confirm-delete"]').click();
   });
 
-  test('flip, mark, requeue on Don\'t Know It, and reach completion', async ({ page }) => {
+  test('flip and navigate with Prev / Next', async ({ page }) => {
     await page.goto('decks');
     await page
       .locator('[data-test="deck-row"]', { hasText: DECK_NAME })
@@ -44,18 +44,23 @@ test.describe('Review session', () => {
       .click();
     await expect(page).toHaveURL(/\/review\/.+/);
 
-    // First card: flip and say "Don't Know It" — it should requeue.
-    await page.locator('[data-test="review-card"]').click();
-    await page.locator('[data-test="mark-dont-know"]').click();
+    const card = page.locator('[data-test="review-card"]');
+    const position = page.locator('[data-test="card-position"]');
+    const prev = page.locator('[data-test="card-prev"]');
+    const next = page.locator('[data-test="card-next"]');
 
-    // Second card: flip and say "Know It".
-    await page.locator('[data-test="review-card"]').click();
-    await page.locator('[data-test="mark-know-it"]').click();
+    await expect(position).toHaveText('1/2');
+    await expect(prev).toBeDisabled();
 
-    // Requeued first card comes back around: flip and say "Know It" this time.
-    await page.locator('[data-test="review-card"]').click();
-    await page.locator('[data-test="mark-know-it"]').click();
+    await page.locator('[data-test="card-flip"]').click();
+    await expect(card).toHaveClass(/is-flipped/);
 
-    await expect(page.locator('[data-test="review-complete"]')).toBeVisible();
+    await next.click();
+    await expect(position).toHaveText('2/2');
+    await expect(card).not.toHaveClass(/is-flipped/);
+    await expect(next).toBeDisabled();
+
+    await prev.click();
+    await expect(position).toHaveText('1/2');
   });
 });

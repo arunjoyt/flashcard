@@ -1,6 +1,5 @@
 import frappe
 from frappe import _
-from frappe.utils import get_last_day, getdate
 
 
 def _get_owned_deck(deck_name):
@@ -101,32 +100,3 @@ def get_all_cards():
         order_by="creation asc",
     )
 
-
-@frappe.whitelist()
-def record_cards_viewed(count, date):
-    count = int(count)
-    if count <= 0:
-        return
-    date = getdate(date)
-
-    existing = frappe.db.exists("Daily Stat", {"user": frappe.session.user, "date": date})
-    if existing:
-        doc = frappe.get_doc("Daily Stat", existing)
-        doc.cards_viewed += count
-        doc.save()
-    else:
-        frappe.get_doc({"doctype": "Daily Stat", "date": date, "cards_viewed": count}).insert()
-
-
-@frappe.whitelist()
-def get_monthly_stats(year, month):
-    year = int(year)
-    month = int(month)
-    start = f"{year:04d}-{month:02d}-01"
-    end = get_last_day(start)
-    rows = frappe.get_all(
-        "Daily Stat",
-        filters={"user": frappe.session.user, "date": ["between", [start, end]]},
-        fields=["date", "cards_viewed"],
-    )
-    return {str(row.date): row.cards_viewed for row in rows}

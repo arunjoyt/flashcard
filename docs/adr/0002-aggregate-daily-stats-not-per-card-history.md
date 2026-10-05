@@ -1,5 +1,7 @@
 # Aggregate daily stats, not per-Card or per-Deck history
 
+**Status: Superseded.** Stats were removed entirely (Stats tab, Daily Stat DocType and its API) to simplify the app. The record below is kept for history.
+
 [[ADR-0001]] deliberately kept Review ephemeral: no per-Card interval, ease factor, or due date, and no last-reviewed date on Deck. We're now adding Daily Stat — one record per calendar day per User, holding a Cards Viewed count — to back a Stats tab calendar. This looks like a reversal of ADR-0001 but isn't: Daily Stat is not linked to any Deck or Card. It answers "how much did I review today," not "when is this Card due" or "when did I last touch this Deck." ADR-0001's actual target — scheduling algorithms and per-Card recall history — is untouched.
 
 Two design choices within this feature, both made together:

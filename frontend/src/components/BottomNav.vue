@@ -5,7 +5,6 @@ const route = useRoute();
 
 const tabs = [
 	{ name: "Decks", icon: "📚", label: "Decks" },
-	{ name: "Stats", icon: "📊", label: "Stats" },
 	{ name: "Settings", icon: "⚙️", label: "Settings" },
 ];
 

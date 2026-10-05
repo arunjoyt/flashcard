@@ -12,8 +12,6 @@ vi.mock("@/api", () => ({
 		updateCard: vi.fn(),
 		deleteCard: vi.fn(),
 		getAllCards: vi.fn(),
-		recordCardsViewed: vi.fn(),
-		getMonthlyStats: vi.fn(),
 	},
 }));
 
