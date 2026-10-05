@@ -6,7 +6,6 @@ const routes = [
 		path: "/decks",
 		name: "Decks",
 		component: () => import("@/pages/Decks.vue"),
-		meta: { tab: true },
 	},
 	{
 		path: "/decks/:deckName/manage",
@@ -25,12 +24,8 @@ const routes = [
 		component: () => import("@/pages/ReviewSession.vue"),
 		props: true,
 	},
-	{
-		path: "/settings",
-		name: "Settings",
-		component: () => import("@/pages/Settings.vue"),
-		meta: { tab: true },
-	},
+	// Old links such as /settings land on Decks instead of a blank page.
+	{ path: "/:pathMatch(.*)*", redirect: "/decks" },
 ];
 
 export function createAppRouter() {

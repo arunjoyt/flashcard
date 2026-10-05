@@ -84,7 +84,7 @@ async function confirmDeleteDeck() {
 </script>
 
 <template>
-	<div class="mx-auto max-w-md px-5 pb-28 pt-8 md:max-w-3xl">
+	<div class="mx-auto max-w-md px-5 pb-12 pt-8 md:max-w-3xl">
 		<button
 			class="mb-4 font-semibold text-gray-500"
 			data-test="manage-back"

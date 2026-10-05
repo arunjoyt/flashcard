@@ -14,5 +14,7 @@ def get_context(context):
             "site_name": frappe.local.site,
             "csrf_token": frappe.sessions.get_csrf_token(),
             "app_version": flashcard.__version__,
+            # get_fullname falls back to the user ID (email) when the full name is empty.
+            "user_full_name": frappe.utils.get_fullname(frappe.session.user),
         }
     )

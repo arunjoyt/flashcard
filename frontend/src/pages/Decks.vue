@@ -5,6 +5,7 @@ import { Input, Button, ErrorMessage } from "frappe-ui";
 import { store } from "@/store";
 import { api } from "@/api";
 import { searchCards } from "@/search";
+import AppHeader from "@/components/AppHeader.vue";
 import DeckRow from "@/components/DeckRow.vue";
 import SearchResults from "@/components/SearchResults.vue";
 
@@ -83,7 +84,8 @@ function manageDeck(deckName) {
 </script>
 
 <template>
-	<div class="mx-auto max-w-md px-5 pb-24 pt-10">
+	<div class="mx-auto max-w-md px-5 pb-24 pt-6">
+		<AppHeader />
 		<h1 class="mb-1 text-3xl font-extrabold text-gray-900">📚 Decks</h1>
 		<p class="mb-4 text-gray-500">Tap a deck to start reviewing, or make a new one.</p>
 
@@ -137,7 +139,11 @@ function manageDeck(deckName) {
 			</ul>
 		</template>
 
-		<div v-if="!searching" class="fixed inset-x-0 bottom-20 flex justify-center pb-6">
+		<div
+			v-if="!searching"
+			class="fixed inset-x-0 bottom-0 flex justify-center pb-6"
+			style="padding-bottom: calc(1.5rem + env(safe-area-inset-bottom))"
+		>
 			<div v-if="showNewDeck" class="w-full max-w-md px-5">
 				<form
 					class="animate-bounce-in flex gap-2 rounded-2xl bg-white p-3 shadow-xl"

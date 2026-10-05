@@ -8,9 +8,9 @@ A simple flashcard app for reviewing self-authored front/back cards, organized i
 |---|---|---|
 | ![Decks](docs/images/decks.png) | ![Manage Deck](docs/images/manage-deck.png) | ![Review](docs/images/review.png) |
 
-| Review Session — front | Review Session — flipped | Settings |
-|---|---|---|
-| ![Review Session front](docs/images/review-session-front.png) | ![Review Session back](docs/images/review-session-back.png) | ![Settings](docs/images/settings.png) |
+| Review Session — front | Review Session — flipped |
+|---|---|
+| ![Review Session front](docs/images/review-session-front.png) | ![Review Session back](docs/images/review-session-back.png) |
 
 Regenerate these after a UI change, against an already-running bench site (same requirement as the Playwright e2e suite below — needs a **Flashcard User** test account):
 
@@ -27,7 +27,7 @@ Builds a throwaway "Spanish Basics" demo deck, captures each view, and deletes t
 - **Decks** — named collections of Cards on one topic; create, rename via cards, and delete (deleting cascades to all its Cards, after confirmation)
 - **Cards** — simple front/back pairs of plain text, managed from the deck's Manage screen
 - **Review Session** — a shuffled flip-through of one deck's Cards; flip each card to reveal its answer and move between cards with Prev / Next. No spaced-repetition scheduling
-- **Single-page UI** — all views load at `/flashcard`; three bottom tabs (Decks, Review, Settings) with instant navigation and no page reloads
+- **Single-page UI** — all views load at `/flashcard` with no page reloads; the Decks screen is home and shows the logged-in user's name and a Log out button at the top
 
 ## User Roles
 

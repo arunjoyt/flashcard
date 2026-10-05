@@ -101,6 +101,19 @@ describe("Decks page", () => {
 		expect(createDeck).toHaveBeenCalledWith("Italian");
 	});
 
+	it("shows the logged-in user's name and a Log out button at the top", async () => {
+		window.user_full_name = "Ada Lovelace";
+		const { wrapper } = await mountDecks();
+		expect(wrapper.find('[data-test="user-name"]').text()).toBe("Ada Lovelace");
+		expect(wrapper.find('[data-test="logout-button"]').text()).toBe("Log out");
+		delete window.user_full_name;
+	});
+
+	it("sends unknown paths such as the old /settings to Decks", async () => {
+		const { router } = await mountDecks("/settings");
+		expect(router.currentRoute.value.name).toBe("Decks");
+	});
+
 	describe("search", () => {
 		beforeEach(() => {
 			store.decks = [

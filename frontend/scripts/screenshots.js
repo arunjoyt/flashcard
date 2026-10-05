@@ -68,7 +68,7 @@ async function main() {
 	const existing = page.locator('[data-test="deck-row"]', { hasText: DECK_NAME });
 	if (await existing.count()) {
 		console.log(`Removing leftover "${DECK_NAME}" deck from a previous run ...`);
-		await existing.locator('[data-test="deck-open"]').click();
+		await existing.locator('[data-test="deck-manage"]').click();
 		await page.locator('[data-test="delete-deck-button"]').click();
 		await page.locator('[data-test="deck-confirm-delete"]').click();
 		await page.waitForURL(/\/decks$/);
@@ -88,19 +88,17 @@ async function main() {
 		.click();
 	await page.waitForURL(/\/decks\/.+\/manage/);
 
-	for (const [front, back] of CARDS) {
-		await page.locator('[data-test="add-card-button"]').click();
-		await page.locator('[data-test="card-front-input"]').fill(front);
-		await page.locator('[data-test="card-back-input"]').fill(back);
-		await page.locator('[data-test="save-card"]').click();
-		await page.locator('[data-test="manage-card-row"]', { hasText: front }).waitFor();
-	}
+	await page.locator('[data-test="bulk-add-button"]').click();
+	await page.locator('[data-test="bulk-add-input"]').fill(CARDS.map(([front, back]) => `${front}, ${back}`).join("\n"));
+	await page.locator('[data-test="bulk-add-submit"]').click();
+	await page.locator('[data-test="manage-card-row"]').nth(CARDS.length - 1).waitFor();
 
 	await shoot(page, "manage-deck");
 
 	await page.goto(`${BASE_URL}/flashcard/review`);
 	await shoot(page, "review");
 
+	await page.goto(`${BASE_URL}/flashcard/decks`);
 	await page
 		.locator('[data-test="deck-row"]', { hasText: DECK_NAME })
 		.locator('[data-test="deck-open"]')
@@ -111,14 +109,11 @@ async function main() {
 	await page.locator('[data-test="review-card"]').click();
 	await shoot(page, "review-session-back");
 
-	await page.goto(`${BASE_URL}/flashcard/settings`);
-	await shoot(page, "settings");
-
 	console.log(`Deleting demo deck "${DECK_NAME}" ...`);
 	await page.goto(`${BASE_URL}/flashcard/decks`);
 	await page
 		.locator('[data-test="deck-row"]', { hasText: DECK_NAME })
-		.locator('[data-test="deck-open"]')
+		.locator('[data-test="deck-manage"]')
 		.click();
 	await page.locator('[data-test="delete-deck-button"]').click();
 	await page.locator('[data-test="deck-confirm-delete"]').click();
