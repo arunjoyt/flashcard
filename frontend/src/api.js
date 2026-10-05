@@ -17,6 +17,8 @@ export const api = {
 	getDeck: (deck_name) => call("flashcard.flashcard.api.get_deck", { deck_name }),
 	createCard: (deck_name, front, back) =>
 		call("flashcard.flashcard.api.create_card", { deck_name, front, back }),
+	createCards: (deck_name, cards) =>
+		call("flashcard.flashcard.api.create_cards", { deck_name, cards }),
 	updateCard: (card_name, front, back) =>
 		call("flashcard.flashcard.api.update_card", { card_name, front, back }),
 	deleteCard: (card_name) => call("flashcard.flashcard.api.delete_card", { card_name }),

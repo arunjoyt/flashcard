@@ -18,14 +18,15 @@ defineEmits(["click", "manage"]);
 				{{ deck.card_count }} card{{ deck.card_count === 1 ? "" : "s" }}
 			</div>
 		</button>
-		<button
-			v-if="showManage"
-			class="flex items-center px-4 text-2xl font-bold text-gray-400 hover:text-gray-600 active:scale-95"
-			aria-label="Manage deck"
-			data-test="deck-manage"
-			@click.stop="$emit('manage')"
-		>
-			›
-		</button>
+		<div v-if="showManage" class="flex items-center pr-4">
+			<button
+				class="rounded-full border border-gray-300 px-3 py-1 text-sm font-semibold text-gray-700 hover:bg-gray-100 active:scale-95"
+				aria-label="Manage deck"
+				data-test="deck-manage"
+				@click.stop="$emit('manage')"
+			>
+				Manage
+			</button>
+		</div>
 	</li>
 </template>

@@ -9,6 +9,7 @@ vi.mock("@/api", () => ({
 		updateDeck: vi.fn(),
 		getDeck: vi.fn(),
 		createCard: vi.fn(),
+		createCards: vi.fn(),
 		updateCard: vi.fn(),
 		deleteCard: vi.fn(),
 		getAllCards: vi.fn(),
@@ -48,6 +49,23 @@ describe("store", () => {
 		await store.addCard("Hola", "Hello");
 		expect(store.activeDeck.cards).toEqual([{ name: "c1", front: "Hola", back: "Hello" }]);
 		expect(store.decks[0].card_count).toBe(2);
+	});
+
+	it("addCards appends all created cards and bumps card_count by their number", async () => {
+		store.decks = [{ name: "Spanish", card_count: 1 }];
+		store.activeDeck = { name: "Spanish", cards: [{ name: "c0", front: "Sí", back: "Yes" }] };
+		const created = [
+			{ name: "c1", front: "Hola", back: "Hello" },
+			{ name: "c2", front: "Adiós", back: "Bye" },
+		];
+		api.createCards.mockResolvedValue(created);
+		await store.addCards([{ front: "Hola", back: "Hello" }, { front: "Adiós", back: "Bye" }]);
+		expect(api.createCards).toHaveBeenCalledWith("Spanish", [
+			{ front: "Hola", back: "Hello" },
+			{ front: "Adiós", back: "Bye" },
+		]);
+		expect(store.activeDeck.cards.map((c) => c.name)).toEqual(["c0", "c1", "c2"]);
+		expect(store.decks[0].card_count).toBe(3);
 	});
 
 	it("removeCard removes the card and decrements the deck's card_count", async () => {

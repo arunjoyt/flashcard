@@ -75,6 +75,25 @@ def create_card(deck_name, front, back):
     return {"name": doc.name, "front": doc.front, "back": doc.back}
 
 
+BULK_ADD_LIMIT = 500
+
+
+@frappe.whitelist()
+def create_cards(deck_name, cards):
+    """Bulk Add: insert all cards or none. Frappe rolls back the request on any error."""
+    _get_owned_deck(deck_name)
+    cards = frappe.parse_json(cards) or []
+    if len(cards) > BULK_ADD_LIMIT:
+        frappe.throw(_("You can add at most {0} cards at once.").format(BULK_ADD_LIMIT))
+    created = []
+    for card in cards:
+        doc = frappe.get_doc(
+            {"doctype": "Card", "deck": deck_name, "front": card.get("front"), "back": card.get("back")}
+        ).insert()
+        created.append({"name": doc.name, "front": doc.front, "back": doc.back})
+    return created
+
+
 @frappe.whitelist()
 def update_card(card_name, front, back):
     doc = frappe.get_doc("Card", card_name)

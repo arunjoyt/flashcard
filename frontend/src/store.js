@@ -47,6 +47,12 @@ export const store = reactive({
 		this.bumpCardCount(this.activeDeck.name, 1);
 	},
 
+	async addCards(cards) {
+		const created = await api.createCards(this.activeDeck.name, cards);
+		this.activeDeck.cards.push(...created);
+		this.bumpCardCount(this.activeDeck.name, created.length);
+	},
+
 	async editCard(cardName, front, back) {
 		const card = await api.updateCard(cardName, front, back);
 		const idx = this.activeDeck.cards.findIndex((c) => c.name === cardName);

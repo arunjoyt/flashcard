@@ -10,11 +10,12 @@ test.use({ storageState: userState });
 const DECK_NAME = `E2E review ${Date.now()}`;
 
 async function addCard(page, front, back) {
-  await page.locator('[data-test="add-card-button"]').click();
-  await page.locator('[data-test="card-front-input"]').fill(front);
-  await page.locator('[data-test="card-back-input"]').fill(back);
-  await page.locator('[data-test="save-card"]').click();
-  await expect(page.locator('[data-test="manage-card-row"]', { hasText: front })).toBeVisible();
+  const newRow = page.locator('[data-test="new-card-row"]');
+  await newRow.locator('[data-test="card-front-cell"]').fill(front);
+  await newRow.locator('[data-test="card-front-cell"]').press('Enter');
+  await newRow.locator('[data-test="card-back-cell"]').fill(back);
+  await newRow.locator('[data-test="card-back-cell"]').press('Enter');
+  await expect(page.locator('[data-test="manage-card-row"] [data-test="card-front-cell"]').last()).toHaveValue(front);
 }
 
 test.describe('Review session', () => {

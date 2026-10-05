@@ -41,21 +41,50 @@ test.describe('Decks', () => {
     await page.locator('[data-test="deck-row"]', { hasText: deckName }).locator('[data-test="deck-open"]').click();
     await expect(page).toHaveURL(/\/decks\/.+\/manage/);
 
-    await page.locator('[data-test="add-card-button"]').click();
-    await page.locator('[data-test="card-front-input"]').fill('Capital of France');
-    await page.locator('[data-test="card-back-input"]').fill('Paris');
-    await page.locator('[data-test="save-card"]').click();
-    await expect(page.locator('[data-test="manage-card-row"]', { hasText: 'Capital of France' })).toBeVisible();
+    const newRow = page.locator('[data-test="new-card-row"]');
+    await newRow.locator('[data-test="card-front-cell"]').fill('Capital of France');
+    await newRow.locator('[data-test="card-front-cell"]').press('Enter');
+    await newRow.locator('[data-test="card-back-cell"]').fill('Paris');
+    await newRow.locator('[data-test="card-back-cell"]').press('Enter');
+    const row = page.locator('[data-test="manage-card-row"]').first();
+    await expect(row.locator('[data-test="card-front-cell"]')).toHaveValue('Capital of France');
+    await expect(newRow.locator('[data-test="card-front-cell"]')).toBeFocused();
 
-    await page.locator('[data-test="manage-card-row"]', { hasText: 'Capital of France' }).click();
-    await page.locator('[data-test="card-back-input"]').fill('Paris, France');
-    await page.locator('[data-test="save-card"]').click();
-    await expect(page.locator('[data-test="manage-card-row"]', { hasText: 'Paris, France' })).toBeVisible();
+    await row.locator('[data-test="card-back-cell"]').fill('Paris, France');
+    await row.locator('[data-test="card-back-cell"]').press('Enter');
+    await expect(row.locator('[data-test="row-saved"]')).toBeVisible();
+    await page.reload();
+    await expect(page.locator('[data-test="manage-card-row"] [data-test="card-back-cell"]')).toHaveValue('Paris, France');
 
-    const row = page.locator('[data-test="manage-card-row"]', { hasText: 'Capital of France' });
     await row.locator('[data-test="card-delete"]').click();
     await row.locator('[data-test="card-confirm-delete"]').click();
     await expect(page.locator('[data-test="manage-card-row"]')).toHaveCount(0);
+
+    await page.locator('[data-test="delete-deck-button"]').click();
+    await page.locator('[data-test="deck-confirm-delete"]').click();
+    await expect(page).toHaveURL(/\/decks$/);
+  });
+
+  test('bulk add cards by pasting comma-separated lines', async ({ page }) => {
+    const deckName = uniqueDeckName('bulk');
+    await page.goto('decks');
+    await createDeck(page, deckName);
+    await page.locator('[data-test="deck-row"]', { hasText: deckName }).locator('[data-test="deck-open"]').click();
+
+    await page.locator('[data-test="bulk-add-button"]').click();
+    const input = page.locator('[data-test="bulk-add-input"]');
+    await input.fill('apple, a fruit, usually red\n"Paris, France", capital city');
+    await expect(page.locator('[data-test="bulk-add-line-error"]')).toHaveCount(1);
+    await expect(page.locator('[data-test="bulk-add-submit"]')).toBeDisabled();
+
+    await input.fill('apple, "a fruit, usually red"\n"Paris, France", capital city');
+    await expect(page.locator('[data-test="bulk-add-line-error"]')).toHaveCount(0);
+    await page.locator('[data-test="bulk-add-submit"]').click();
+
+    const fronts = page.locator('[data-test="manage-card-row"] [data-test="card-front-cell"]');
+    await expect(fronts).toHaveCount(2);
+    await expect(fronts.nth(1)).toHaveValue('Paris, France');
+    await expect(page.locator('[data-test="manage-card-row"] [data-test="card-back-cell"]').first()).toHaveValue('a fruit, usually red');
 
     await page.locator('[data-test="delete-deck-button"]').click();
     await page.locator('[data-test="deck-confirm-delete"]').click();

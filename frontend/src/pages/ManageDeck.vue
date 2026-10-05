@@ -3,6 +3,8 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { Input, Button, ErrorMessage } from "frappe-ui";
 import { store } from "@/store";
+import CardGridRow from "@/components/CardGridRow.vue";
+import BulkAddSheet from "@/components/BulkAddSheet.vue";
 
 const props = defineProps({
 	deckName: { type: String, required: true },
@@ -10,16 +12,7 @@ const props = defineProps({
 
 const router = useRouter();
 
-const showNewCard = ref(false);
-const editingCard = ref(null); // card object being edited, or null
-const front = ref("");
-const back = ref("");
-const busy = ref(false);
-const formError = ref("");
-
-const confirmingDeleteCard = ref(null);
-const deletingCard = ref(false);
-const cardDeleteError = ref("");
+const showBulkAdd = ref(false);
 
 const confirmingDeleteDeck = ref(false);
 const deletingDeck = ref(false);
@@ -61,64 +54,6 @@ async function submitRenameDeck() {
 	}
 }
 
-function openNewCard() {
-	editingCard.value = null;
-	front.value = "";
-	back.value = "";
-	formError.value = "";
-	showNewCard.value = true;
-}
-
-function openEditCard(card) {
-	editingCard.value = card;
-	front.value = card.front;
-	back.value = card.back;
-	formError.value = "";
-	showNewCard.value = true;
-}
-
-function closeForm() {
-	showNewCard.value = false;
-}
-
-async function submitCard() {
-	const f = front.value.trim();
-	const b = back.value.trim();
-	if (!f || !b || busy.value) return;
-	busy.value = true;
-	formError.value = "";
-	try {
-		if (editingCard.value) {
-			await store.editCard(editingCard.value.name, f, b);
-		} else {
-			await store.addCard(f, b);
-		}
-		closeForm();
-	} catch (error) {
-		formError.value = error?.messages?.join("\n") || error?.message || "Failed to save";
-	} finally {
-		busy.value = false;
-	}
-}
-
-function startDeleteCard(cardName) {
-	cardDeleteError.value = "";
-	confirmingDeleteCard.value = cardName;
-}
-
-async function confirmDeleteCard(cardName) {
-	deletingCard.value = true;
-	cardDeleteError.value = "";
-	try {
-		await store.removeCard(cardName);
-		confirmingDeleteCard.value = null;
-	} catch (error) {
-		cardDeleteError.value = error?.messages?.join("\n") || error?.message || "Failed to delete";
-	} finally {
-		deletingCard.value = false;
-	}
-}
-
 async function confirmDeleteDeck() {
 	deletingDeck.value = true;
 	deckDeleteError.value = "";
@@ -134,7 +69,7 @@ async function confirmDeleteDeck() {
 </script>
 
 <template>
-	<div class="mx-auto max-w-md px-5 pb-28 pt-8">
+	<div class="mx-auto max-w-md px-5 pb-28 pt-8 md:max-w-3xl">
 		<button
 			class="mb-4 font-semibold text-gray-500"
 			data-test="manage-back"
@@ -181,64 +116,26 @@ async function confirmDeleteDeck() {
 		</div>
 		<ErrorMessage class="mb-4" :message="renameError" />
 
-		<div v-if="!store.activeDeck?.cards.length" class="mt-10 text-center">
-			<p class="text-lg font-semibold text-gray-600">No cards yet!</p>
-			<p class="text-gray-400">Add a card below to start building this deck.</p>
+		<div class="mb-3 flex items-center justify-between">
+			<p class="text-sm text-gray-500">
+				{{ store.activeDeck?.cards.length || 0 }} card{{ store.activeDeck?.cards.length === 1 ? "" : "s" }}
+			</p>
+			<Button variant="subtle" size="sm" data-test="bulk-add-button" @click="showBulkAdd = true">
+				Paste cards
+			</Button>
 		</div>
 
-		<ErrorMessage class="mb-3" :message="cardDeleteError" />
-
-		<ul class="space-y-3">
-			<li
-				v-for="card in store.activeDeck?.cards"
-				:key="card.name"
-				data-test="manage-card-row"
-				class="animate-pop-in flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm"
-			>
-				<button class="flex-1 text-left" @click="openEditCard(card)">
-					<div class="font-bold text-gray-900">{{ card.front }}</div>
-					<div class="text-sm text-gray-500">{{ card.back }}</div>
-				</button>
-
-				<div v-if="confirmingDeleteCard === card.name" class="ml-3 flex shrink-0 gap-1">
-					<Button
-						data-test="card-confirm-delete"
-						variant="solid"
-						theme="red"
-						size="sm"
-						:loading="deletingCard"
-						@click="confirmDeleteCard(card.name)"
-					>
-						Confirm
-					</Button>
-					<Button
-						data-test="card-cancel-delete"
-						variant="ghost"
-						size="sm"
-						@click="confirmingDeleteCard = null"
-					>
-						Cancel
-					</Button>
-				</div>
-				<button
-					v-else
-					class="ml-3 rounded-full p-2 text-red-500 hover:bg-red-50"
-					aria-label="Delete card"
-					data-test="card-delete"
-					@click="startDeleteCard(card.name)"
-				>
-					✕
-				</button>
-			</li>
+		<div class="mb-2 grid grid-cols-[1fr_1fr_2rem] gap-2 px-3 text-xs font-bold uppercase text-gray-500">
+			<div>Front</div>
+			<div>Back</div>
+		</div>
+		<ul v-if="store.activeDeck" class="space-y-2 rounded-2xl bg-white p-3 shadow-sm" data-test="card-grid">
+			<CardGridRow v-for="card in store.activeDeck.cards" :key="card.name" :card="card" />
+			<CardGridRow key="new" />
 		</ul>
-
-		<button
-			class="mt-6 w-full rounded-2xl border-2 border-dashed border-grape-300 py-3 font-bold text-grape-600 active:scale-95"
-			data-test="add-card-button"
-			@click="openNewCard"
-		>
-			+ Add Card
-		</button>
+		<p v-if="store.activeDeck && !store.activeDeck.cards.length" class="mt-3 text-center text-sm text-gray-400">
+			No cards yet. Type in the first row, or use Paste cards to add many at once.
+		</p>
 
 		<ErrorMessage class="mt-4" :message="deckDeleteError" />
 
@@ -270,44 +167,6 @@ async function confirmDeleteDeck() {
 			Delete this deck
 		</button>
 
-		<div v-if="showNewCard" class="fixed inset-0 flex items-end bg-black/40" @click.self="closeForm">
-			<form
-				class="animate-bounce-in w-full space-y-3 rounded-t-3xl bg-white p-5"
-				@submit.prevent="submitCard"
-			>
-				<h2 class="text-lg font-bold text-grape-700">
-					{{ editingCard ? "Edit Card" : "New Card" }}
-				</h2>
-				<Input
-					v-model="front"
-					type="textarea"
-					placeholder="Front (question)"
-					:rows="2"
-					autofocus
-					data-test="card-front-input"
-				/>
-				<Input
-					v-model="back"
-					type="textarea"
-					placeholder="Back (answer)"
-					:rows="2"
-					data-test="card-back-input"
-				/>
-				<ErrorMessage :message="formError" />
-				<div class="flex gap-2">
-					<Button type="button" variant="ghost" class="flex-1" @click="closeForm">Cancel</Button>
-					<Button
-						type="submit"
-						variant="solid"
-						theme="blue"
-						class="flex-1"
-						:loading="busy"
-						data-test="save-card"
-					>
-						Save
-					</Button>
-				</div>
-			</form>
-		</div>
+		<BulkAddSheet v-if="showBulkAdd" @close="showBulkAdd = false" />
 	</div>
 </template>
