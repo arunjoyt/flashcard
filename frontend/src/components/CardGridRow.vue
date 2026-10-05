@@ -7,6 +7,7 @@ import CardCell from "@/components/CardCell.vue";
 // `card` is null for the always-empty new row at the bottom of the grid.
 const props = defineProps({
 	card: { type: Object, default: null },
+	highlighted: { type: Boolean, default: false },
 });
 
 const isNew = computed(() => !props.card);
@@ -113,7 +114,9 @@ async function confirmDelete() {
 	<li
 		ref="rowEl"
 		:data-test="isNew ? 'new-card-row' : 'manage-card-row'"
-		class="grid grid-cols-[1fr_1fr_2rem] items-start gap-2"
+		:data-card-name="card?.name"
+		class="-m-1 grid grid-cols-[1fr_1fr_2rem] items-start gap-2 rounded-xl p-1 transition-colors duration-700"
+		:class="{ 'bg-grape-100': highlighted }"
 		@focusout="onFocusOut"
 	>
 		<CardCell

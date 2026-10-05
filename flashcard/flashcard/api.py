@@ -115,7 +115,7 @@ def get_all_cards():
     return frappe.get_all(
         "Card",
         filters={"user": frappe.session.user},
-        fields=["name", "front", "back"],
+        fields=["name", "deck", "front", "back"],
         order_by="creation asc",
     )
 

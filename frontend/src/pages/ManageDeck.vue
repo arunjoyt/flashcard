@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted, nextTick } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { Input, Button, ErrorMessage } from "frappe-ui";
 import { store } from "@/store";
 import CardGridRow from "@/components/CardGridRow.vue";
@@ -11,6 +11,8 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const route = useRoute();
+const highlightedCard = ref(null);
 
 const showBulkAdd = ref(false);
 
@@ -24,10 +26,23 @@ const renamingBusy = ref(false);
 const renameError = ref("");
 
 onMounted(async () => {
-	if (store.activeDeck?.name !== props.deckName) {
-		await store.openDeck(props.deckName);
-	}
+	// Always reload: cards may have changed elsewhere, and a Search result must be in the grid.
+	await store.openDeck(props.deckName);
+	if (route.query.card) await showCard(route.query.card);
 });
+
+// Arriving from a Search result: scroll to the Card and flash its row.
+async function showCard(cardName) {
+	router.replace({ query: {} });
+	highlightedCard.value = cardName;
+	await nextTick();
+	document.querySelector(`[data-card-name="${CSS.escape(cardName)}"]`)?.scrollIntoView({ block: "center" });
+	setTimeout(() => (highlightedCard.value = null), 1500);
+}
+
+function backToDecks() {
+	router.push({ name: "Decks", query: store.lastSearch ? { q: store.lastSearch } : {} });
+}
 
 function startRenameDeck() {
 	deckNameInput.value = store.activeDeck?.deck_name || "";
@@ -73,7 +88,7 @@ async function confirmDeleteDeck() {
 		<button
 			class="mb-4 font-semibold text-gray-500"
 			data-test="manage-back"
-			@click="router.push({ name: 'Decks' })"
+			@click="backToDecks"
 		>
 			← Decks
 		</button>
@@ -130,7 +145,12 @@ async function confirmDeleteDeck() {
 			<div>Back</div>
 		</div>
 		<ul v-if="store.activeDeck" class="space-y-2 rounded-2xl bg-white p-3 shadow-sm" data-test="card-grid">
-			<CardGridRow v-for="card in store.activeDeck.cards" :key="card.name" :card="card" />
+			<CardGridRow
+				v-for="card in store.activeDeck.cards"
+				:key="card.name"
+				:card="card"
+				:highlighted="card.name === highlightedCard"
+			/>
 			<CardGridRow key="new" />
 		</ul>
 		<p v-if="store.activeDeck && !store.activeDeck.cards.length" class="mt-3 text-center text-sm text-gray-400">

@@ -4,6 +4,7 @@ import { api } from "./api";
 export const store = reactive({
 	decks: [],
 	activeDeck: null, // { name, cards: [{ name, front, back }] }
+	lastSearch: "", // Decks tab search text, restored when leaving Manage Deck
 
 	async loadDecks() {
 		if (!this._loadDecksPromise) {

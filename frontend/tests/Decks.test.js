@@ -3,15 +3,18 @@ import { mount, flushPromises } from "@vue/test-utils";
 import Decks from "@/pages/Decks.vue";
 import { store } from "@/store";
 import { createAppRouter } from "@/router";
+import { api } from "@/api";
+
+vi.mock("@/api", () => ({ api: { getAllCards: vi.fn() } }));
 
 beforeEach(() => {
 	store.decks = [];
 	store.activeDeck = null;
 });
 
-async function mountDecks() {
+async function mountDecks(path = "/decks") {
 	const router = createAppRouter();
-	await router.push("/decks");
+	await router.push(path);
 	await router.isReady();
 	return { router, wrapper: mount(Decks, { global: { plugins: [router] } }) };
 }
@@ -96,5 +99,76 @@ describe("Decks page", () => {
 		await wrapper.find('[data-test="deck-name-input"]').setValue("  Italian  ");
 		await wrapper.find('[data-test="new-deck-form"]').trigger("submit");
 		expect(createDeck).toHaveBeenCalledWith("Italian");
+	});
+
+	describe("search", () => {
+		beforeEach(() => {
+			store.decks = [
+				{ name: "d1", deck_name: "Spanish", card_count: 2 },
+				{ name: "d2", deck_name: "Biology", card_count: 1 },
+			];
+			api.getAllCards.mockReset().mockResolvedValue([
+				{ name: "c1", deck: "d1", front: "Adiós", back: "Goodbye" },
+				{ name: "c2", deck: "d1", front: "Hola", back: "Hello" },
+				{ name: "c3", deck: "d2", front: "Photosynthesis", back: "Plants make sugar" },
+			]);
+		});
+
+		it("replaces the deck list with matching cards and keeps the query in the URL", async () => {
+			const { wrapper, router } = await mountDecks();
+			await wrapper.find('[data-test="search-input"]').setValue("adios");
+			await flushPromises();
+			expect(wrapper.find('[data-test="deck-row"]').exists()).toBe(false);
+			expect(wrapper.find('[data-test="new-deck-button"]').exists()).toBe(false);
+			const results = wrapper.findAll('[data-test="search-result"]');
+			expect(results).toHaveLength(1);
+			expect(results[0].text()).toContain("Adiós");
+			expect(wrapper.find('[data-test="search-deck"]').text()).toBe("Spanish");
+			expect(router.currentRoute.value.query.q).toBe("adios");
+			expect(store.lastSearch).toBe("adios");
+		});
+
+		it("loads cards once per visit, not on every keystroke", async () => {
+			const { wrapper } = await mountDecks();
+			const input = wrapper.find('[data-test="search-input"]');
+			await input.setValue("h");
+			await input.setValue("he");
+			await flushPromises();
+			expect(api.getAllCards).toHaveBeenCalledTimes(1);
+		});
+
+		it("restores the search from the URL", async () => {
+			const { wrapper } = await mountDecks("/decks?q=photo");
+			await flushPromises();
+			expect(wrapper.find('[data-test="search-input"]').element.value).toBe("photo");
+			expect(wrapper.findAll('[data-test="search-result"]')).toHaveLength(1);
+		});
+
+		it("says when nothing matches", async () => {
+			const { wrapper } = await mountDecks();
+			await wrapper.find('[data-test="search-input"]').setValue("zzz");
+			await flushPromises();
+			expect(wrapper.find('[data-test="search-empty"]').text()).toContain('No cards match "zzz"');
+		});
+
+		it("clearing the search brings the deck list back", async () => {
+			const { wrapper, router } = await mountDecks("/decks?q=hola");
+			await flushPromises();
+			await wrapper.find('[data-test="search-clear"]').trigger("click");
+			await flushPromises();
+			expect(wrapper.findAll('[data-test="deck-row"]')).toHaveLength(2);
+			expect(router.currentRoute.value.query.q).toBeUndefined();
+		});
+
+		it("opening a result goes to that card in Manage Deck", async () => {
+			const { wrapper, router } = await mountDecks("/decks?q=photo");
+			await flushPromises();
+			await wrapper.find('[data-test="search-result"]').trigger("click");
+			await vi.waitFor(() => {
+				expect(router.currentRoute.value.name).toBe("ManageDeck");
+			});
+			expect(router.currentRoute.value.params.deckName).toBe("d2");
+			expect(router.currentRoute.value.query.card).toBe("c3");
+		});
 	});
 });

@@ -40,11 +40,18 @@ _Avoid_: Reveal, turn over
 
 ---
 
+## Finding
+
+**Search**: Finding Cards across every Deck by typing in the box at the top of the Decks tab. A Card matches when every typed word appears somewhere in its Front or Back — ignoring case and accents, and matching parts of words. While a search is active, matching Cards replace the Deck list, each shown with its Front, Back and Deck. Tapping one opens that Card's Deck in Manage Deck at that Card, ready to fix; returning keeps the search. Search finds Cards only, not Decks, and is not a way to start a Review Session.
+_Avoid_: Filter, lookup, find
+
+---
+
 ## Navigation
 
 Two bottom tabs: Decks, Settings. Decks is the default landing tab — opening the app lands there, no auto-started Review Session (see [[ADR-0003]], reverted). There is no per-Deck hub screen — Manage Deck is the only per-Deck screen, reached from the Decks tab.
 
-**Decks (tab)**: The default landing tab — shows All Cards (pinned first) plus every real Deck, each with its Card count. This is where Review and the old Decks tab merged — reviewing, not managing, is the primary action. Tapping a Deck row (or All Cards) with at least one Card launches a Review Session immediately, no intermediate confirmation screen. Tapping a real Deck row with zero Cards opens Manage Deck instead, since there's nothing to review yet. A labelled "Manage" button on each real Deck's row (not shown on All Cards, which has nothing to manage) opens Manage Deck directly even when the Deck has Cards. Decks are created here.
+**Decks (tab)**: The default landing tab — shows All Cards (pinned first) plus every real Deck, each with its Card count. This is where Review and the old Decks tab merged — reviewing, not managing, is the primary action. A Search box sits at the top; while it has text, matching Cards replace the Deck list. Tapping a Deck row (or All Cards) with at least one Card launches a Review Session immediately, no intermediate confirmation screen. Tapping a real Deck row with zero Cards opens Manage Deck instead, since there's nothing to review yet. A labelled "Manage" button on each real Deck's row (not shown on All Cards, which has nothing to manage) opens Manage Deck directly even when the Deck has Cards. Decks are created here.
 _Avoid_: Home, dashboard, library, Deck List, Review tab (merged away)
 
 **Manage Deck**: The per-Deck screen reached from the Decks tab (see above for which taps land here). Cards are shown as a two-column Front | Back grid and are added, edited, and deleted directly in it — one at a time by typing into the grid, or many at once via Bulk Add. Deleting the Deck itself also happens only here. All Cards has no Manage Deck screen — it isn't a Deck.
