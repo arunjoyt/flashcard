@@ -101,9 +101,10 @@ describe("Decks page", () => {
 		expect(createDeck).toHaveBeenCalledWith("Italian");
 	});
 
-	it("shows the logged-in user's name and a Log out button at the top", async () => {
+	it("shows the app name, the logged-in user's name and a Log out button at the top", async () => {
 		window.user_full_name = "Ada Lovelace";
 		const { wrapper } = await mountDecks();
+		expect(wrapper.find('[data-test="app-name"]').text()).toContain("Flashcard");
 		expect(wrapper.find('[data-test="user-name"]').text()).toBe("Ada Lovelace");
 		expect(wrapper.find('[data-test="logout-button"]').text()).toBe("Log out");
 		delete window.user_full_name;
